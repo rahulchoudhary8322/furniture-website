@@ -1,0 +1,11 @@
+// Test route for TTS
+app.get("/test-tts", (req, res) => {
+  const testText = "नमस्ते भाई, कैसे हो?";
+  
+  exec(`python google_tts.py "${encodeURIComponent(testText)}"`, (error) => {
+    if (error) {
+      return res.json({ error: error.message });
+    }
+    res.json({ success: true, audio: "http://localhost:5000/audio" });
+  });
+});
