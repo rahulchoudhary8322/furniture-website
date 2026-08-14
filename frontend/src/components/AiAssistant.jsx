@@ -31,7 +31,7 @@ export default function AiAssistant() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/ai/chat', {
+      const response = await fetch(`${window.API_URL}/api/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: userMessage })
@@ -138,7 +138,7 @@ export default function AiAssistant() {
                         className="ai-product-card"
                       >
                         <img 
-                          src={prod.primary_image ? `http://localhost:5000${prod.primary_image}` : 'https://placehold.co/80x80?text=Product'} 
+                          src={prod.primary_image ? `${window.API_URL}${prod.primary_image}` : 'https://placehold.co/80x80?text=Product'} 
                           alt={prod.name} 
                           style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} 
                         />

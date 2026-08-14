@@ -121,7 +121,7 @@ const sendOrderNotification = async (order, items) => {
 
           <div style="text-align: center; margin-top: 35px; padding: 20px; background-color: #f7f9f8; border-radius: 8px;">
             <p style="margin: 0 0 12px 0; font-size: 0.88rem; color: #555; font-weight: 500;">Access the Admin Panel console to dispatch items or print the custom GST Invoice.</p>
-            <a href="http://localhost:5173/admin" style="display: inline-block; padding: 12px 25px; background-color: #0A2A1B; color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(10,42,27,0.2);">Open Admin Dashboard</a>
+            <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/admin" style="display: inline-block; padding: 12px 25px; background-color: #0A2A1B; color: #ffffff; text-decoration: none; border-radius: 30px; font-weight: bold; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(10,42,27,0.2);">Open Admin Dashboard</a>
           </div>
           
           <div style="text-align: center; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; font-size: 0.75rem; color: #999;">

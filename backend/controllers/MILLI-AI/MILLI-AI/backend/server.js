@@ -199,7 +199,7 @@ async function generateAudio(text) {
         }, {
             headers: {
                 "Content-Type": "application/json",
-                "API-Subscription-Key": process.env.SARVAM_API_KEY || "sk_6cvymwpd_TIpIyICas7AH2wzcM8uOwjwY"
+                "API-Subscription-Key": process.env.SARVAM_API_KEY || ""
             },
             timeout: 12000
         });

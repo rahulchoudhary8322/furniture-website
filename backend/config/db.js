@@ -6,29 +6,32 @@ require('dotenv').config();
 const dbConfig = {
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  password: process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : '',
   port: process.env.DB_PORT || 3306,
+  database: process.env.DB_NAME || 'sdc_canteen',
   multipleStatements: true // Allow executing setup.sql
 };
 
 let pool;
 
 async function initializeDatabase() {
-  try {
-    // 1. First connect without a database selected
-    const connection = await mysql.createConnection(dbConfig);
-    console.log('Connected to MySQL server successfully.');
+  const isLocal = !process.env.DB_HOST || process.env.DB_HOST === 'localhost' || process.env.DB_HOST === '127.0.0.1';
 
-    // 2. Create the database if it doesn't exist
-    await connection.query('CREATE DATABASE IF NOT EXISTS sdc_canteen;');
-    console.log('Database "sdc_canteen" verified/created.');
-    await connection.end();
+  try {
+    if (isLocal) {
+      // 1. First connect without a database selected (local only)
+      const { database, ...connectConfig } = dbConfig;
+      const connection = await mysql.createConnection(connectConfig);
+      console.log('Connected to local MySQL server successfully.');
+
+      // 2. Create the database if it doesn't exist (local only)
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\`;`);
+      console.log(`Database "${dbConfig.database}" verified/created locally.`);
+      await connection.end();
+    }
 
     // 3. Create the connection pool with the database selected
-    pool = mysql.createPool({
-      ...dbConfig,
-      database: 'sdc_canteen'
-    });
+    pool = mysql.createPool(dbConfig);
 
     // 4. Check if the "products" table already exists. If not, run setup.sql
     const [tables] = await pool.query("SHOW TABLES LIKE 'products'");
@@ -41,14 +44,20 @@ async function initializeDatabase() {
       await pool.query(sqlContent);
       console.log('Database schema and seed data successfully initialized.');
       
-      // Hash a default admin password and insert it
+      // Hash admin password from env or fall back to default for local development
       const bcrypt = require('bcryptjs');
-      const hashedPassword = await bcrypt.hash('admin123', 10);
+      const adminUser = process.env.ADMIN_USERNAME || 'admin';
+      const adminPass = process.env.ADMIN_PASSWORD || 'admin123';
+      const hashedPassword = await bcrypt.hash(adminPass, 10);
       await pool.query(
         'INSERT IGNORE INTO admin_users (id, username, password) VALUES (1, ?, ?)',
-        ['admin', hashedPassword]
+        [adminUser, hashedPassword]
       );
-      console.log('Default administrator created. (username: admin, password: admin123)');
+      if (!process.env.ADMIN_PASSWORD) {
+        console.log('Default administrator created. (username: admin, password: admin123)');
+      } else {
+        console.log(`Administrator "${adminUser}" verified/created from environment variables.`);
+      }
     } else {
       console.log('Database tables already exist. Skipping seed process.');
     }

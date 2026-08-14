@@ -34,7 +34,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
 
   useEffect(() => {
     // 1. Fetch Banners
-    fetch('http://localhost:5000/api/admin/banners')
+    fetch(`${window.API_URL}/api/admin/banners`)
       .then(res => res.json())
       .then(res => {
         if (res.success && res.data.length > 0) {
@@ -54,7 +54,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
       });
 
     // 2. Fetch Reviews from admin reviews endpoint (simulated helper or static fallback)
-    fetch('http://localhost:5000/api/products')
+    fetch(`${window.API_URL}/api/products`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
@@ -70,7 +70,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
 
   // 3. Fetch products based on active tab
   useEffect(() => {
-    let url = 'http://localhost:5000/api/products';
+    let url = `${window.API_URL}/api/products`;
     if (activeTab === 'featured') url += '?featured=true';
     if (activeTab === 'bestseller') url += '?bestseller=true';
     if (activeTab === 'newarrival') url += '?newarrival=true';
@@ -118,7 +118,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
       {banners.length > 0 && (
         <section style={{ position: 'relative', height: '520px', backgroundColor: 'var(--primary)', overflow: 'hidden' }} className="hero-section">
           {banners.map((slide, idx) => {
-            const imageUrl = slide.image_url.startsWith('/') ? `http://localhost:5000${slide.image_url}` : slide.image_url;
+            const imageUrl = slide.image_url.startsWith('/') ? `${window.API_URL}${slide.image_url}` : slide.image_url;
             return (
               <div 
                 key={slide.id} 
@@ -198,7 +198,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
                   backgroundColor: 'var(--bg)', boxShadow: 'var(--shadow)', transition: 'var(--transition)'
                 }} className="circle-image-holder">
                   <img 
-                    src={cat.icon.startsWith('/') ? `http://localhost:5000${cat.icon}` : cat.icon} 
+                    src={cat.icon.startsWith('/') ? `${window.API_URL}${cat.icon}` : cat.icon} 
                     alt={cat.name} 
                     onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
@@ -337,7 +337,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
 
           <div style={{ position: 'relative' }}>
             <img 
-              src="http://localhost:5000/uploads/cat-furniture.jpg" 
+              src={`${window.API_URL}/uploads/cat-furniture.jpg`} 
               alt="SDC Furniture Showroom" 
               onError={(e) => { e.target.src = 'https://placehold.co/500x400/0a2a1b/ffffff?text=SDC+Showroom'; }}
               style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-hover)' }} 
@@ -398,7 +398,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
             ].map(item => (
               <div key={item.id} style={{ position: 'relative', overflow: 'hidden', height: '220px', borderRadius: 'var(--radius-md)' }} className="gallery-card">
                 <img 
-                  src={item.img.startsWith('/') ? `http://localhost:5000${item.img}` : item.img} 
+                  src={item.img.startsWith('/') ? `${window.API_URL}${item.img}` : item.img} 
                   alt={item.title} 
                   onError={(e) => { e.target.src = item.fallback; }}
                   style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'var(--transition)' }} 

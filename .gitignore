@@ -1,4 +1,23 @@
-node_modules
+# Dependency directories
+node_modules/
+
+# Local env files (contain private secrets)
 .env
 *.env
-node_modules/
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Audio and temporary cache files
+*.wav
+*.tmp
+audio_cache/
+.cache/
+
+# IDE files
+.idea/
+.vscode/
+*.sw?

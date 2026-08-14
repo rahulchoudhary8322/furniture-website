@@ -4,35 +4,51 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const db = require('../config/db');
 const userAuth = require('../middleware/userAuth');
+const firebaseAdmin = require('../config/firebaseAdmin');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'sdc_canteen_jwt_secret_key_1998';
 
 // 1. Customer Registration
 router.post('/register', async (req, res) => {
-  const { username, email, password, full_name, phone, address, city, state, pincode } = req.body;
-
-  if (!username || !email || !password) {
-    return res.status(400).json({ success: false, message: 'Username, email and password are required.' });
-  }
+  const { username, email, password, full_name, phone, address, city, state, pincode, firebaseToken } = req.body;
 
   try {
+    let finalEmail = email;
+    let finalUsername = username;
+    let firebaseUid = null;
+
+    if (firebaseToken && firebaseAdmin.isInitialized()) {
+      const decodedToken = await firebaseAdmin.auth().verifyIdToken(firebaseToken);
+      finalEmail = decodedToken.email;
+      firebaseUid = decodedToken.uid;
+      if (!finalUsername) {
+        finalUsername = decodedToken.name || decodedToken.email.split('@')[0];
+      }
+    } else {
+      if (!finalUsername || !finalEmail || !password) {
+        return res.status(400).json({ success: false, message: 'Username, email and password are required.' });
+      }
+    }
+
     // Check if username or email already exists
     const [existing] = await db.query(
       'SELECT id FROM users WHERE username = ? OR email = ?',
-      [username, email]
+      [finalUsername, finalEmail]
     );
 
     if (existing.length > 0) {
+      if (firebaseToken) {
+        return res.status(200).json({ success: true, message: 'User already synced.', userId: existing[0].id });
+      }
       return res.status(400).json({ success: false, message: 'Username or email already registered.' });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const passwordToHash = password || `FIREBASE_USER_${Date.now()}`;
+    const hashedPassword = await bcrypt.hash(passwordToHash, 10);
 
-    // Insert user
     const [result] = await db.query(
       'INSERT INTO users (username, email, password, full_name, phone, address, city, state, pincode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [username, email, hashedPassword, full_name || null, phone || null, address || null, city || null, state || null, pincode || null]
+      [finalUsername, finalEmail, hashedPassword, full_name || null, phone || null, address || null, city || null, state || null, pincode || null]
     );
 
     res.status(217).json({
@@ -48,13 +64,54 @@ router.post('/register', async (req, res) => {
 
 // 2. Customer Login
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res.status(400).json({ success: false, message: 'Username and password are required.' });
-  }
+  const { username, password, firebaseToken } = req.body;
 
   try {
+    if (firebaseToken && firebaseAdmin.isInitialized()) {
+      const decodedToken = await firebaseAdmin.auth().verifyIdToken(firebaseToken);
+      
+      if (!decodedToken.email_verified) {
+        return res.status(401).json({ success: false, message: 'Email address not verified. Please verify your email first.' });
+      }
+
+      const email = decodedToken.email;
+
+      const [users] = await db.query('SELECT * FROM users WHERE email = ?', [email]);
+      let user = users[0];
+
+      if (!user) {
+        // Auto register Firebase user if they don't exist in MySQL
+        const usernameFallback = decodedToken.name || email.split('@')[0];
+        const dummyPassword = await bcrypt.hash(`FIREBASE_USER_${Date.now()}`, 10);
+        const [result] = await db.query(
+          'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+          [usernameFallback, email, dummyPassword]
+        );
+        const [newUsers] = await db.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
+        user = newUsers[0];
+      }
+
+      return res.status(200).json({
+        success: true,
+        token: firebaseToken,
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          full_name: user.full_name,
+          phone: user.phone,
+          address: user.address,
+          city: user.city,
+          state: user.state,
+          pincode: user.pincode
+        }
+      });
+    }
+
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Username and password are required.' });
+    }
+
     const [users] = await db.query(
       'SELECT * FROM users WHERE username = ? OR email = ?',
       [username, username]
@@ -71,7 +128,6 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ success: false, message: 'Invalid username or password.' });
     }
 
-    // Generate JWT (with role customer)
     const token = jwt.sign(
       { id: user.id, username: user.username, role: 'customer' },
       JWT_SECRET,

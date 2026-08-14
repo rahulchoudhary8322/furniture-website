@@ -1,17 +1,39 @@
 const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const firebaseAdmin = require('../config/firebaseAdmin');
 require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'sdc_canteen_jwt_secret_key_1998';
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ success: false, message: 'Please provide username and password.' });
-  }
+  const { username, password, firebaseToken } = req.body;
 
   try {
+    if (firebaseToken && firebaseAdmin.isInitialized()) {
+      const decodedToken = await firebaseAdmin.auth().verifyIdToken(firebaseToken);
+      const email = decodedToken.email;
+
+      const [rows] = await db.query('SELECT * FROM admin_users WHERE username = ?', [email]);
+      const adminEmailEnv = process.env.ADMIN_USERNAME || 'admin';
+
+      if (rows.length > 0 || email === adminEmailEnv || email.split('@')[0] === adminEmailEnv) {
+        const adminUser = rows[0] || { id: 1, username: email };
+        return res.status(200).json({
+          success: true,
+          message: 'Login successful',
+          token: firebaseToken,
+          admin: { id: adminUser.id, username: adminUser.username }
+        });
+      } else {
+        return res.status(401).json({ success: false, message: 'Invalid admin credentials or role unauthorized.' });
+      }
+    }
+
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'Please provide username and password.' });
+    }
+
     const [rows] = await db.query('SELECT * FROM admin_users WHERE username = ?', [username]);
     if (rows.length === 0) {
       return res.status(401).json({ success: false, message: 'Invalid credentials.' });
@@ -31,8 +53,8 @@ exports.login = async (req, res) => {
       admin: { id: admin.id, username: admin.username }
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: 'Server error during login.' });
+    console.error('Admin login error:', error);
+    res.status(500).json({ success: false, message: 'Server error during admin login.' });
   }
 };
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Package, FolderTree, Tag, Image, Settings, HelpCircle, Search, Edit, Trash2, Plus, Star, ShieldCheck, X, User, FileText, Printer } from 'lucide-react';
 
 const woodTemplate = {
-  banner_image: 'http://localhost:5000/uploads/cat-furniture.jpg',
+  banner_image: `${window.API_URL || 'http://localhost:5000'}/uploads/cat-furniture.jpg`,
   banner_title: 'Uncompromising Quality & Generational Craftsmanship',
   banner_subtitle: 'Artisanal Teak Wood Furniture Built to Stay in Your Family for Generations',
   story_title: 'Sustainably Harvested. Kiln-Dried. Expertly Hand-Carved.',
@@ -24,7 +24,7 @@ const woodTemplate = {
 };
 
 const electronicsTemplate = {
-  banner_image: 'http://localhost:5000/uploads/cat-electronics.jpg',
+  banner_image: `${window.API_URL || 'http://localhost:5000'}/uploads/cat-electronics.jpg`,
   banner_title: 'Intelligent Technology. Certified Reliability.',
   banner_subtitle: 'Upgrade Your Home with SDC Canteen Inverter Appliances & Entertainment Displays',
   story_title: 'Authorized Distribution & Brand Care Protection',
@@ -137,45 +137,45 @@ export default function AdminDashboard({ adminToken, onLogout }) {
 
   // Fetch data helpers
   const fetchProducts = () => {
-    fetch('http://localhost:5000/api/products')
+    fetch(`${window.API_URL}/api/products`)
       .then(res => res.json())
       .then(res => { if (res.success) setProducts(res.data); });
   };
 
   const fetchCategories = () => {
-    fetch('http://localhost:5000/api/categories')
+    fetch(`${window.API_URL}/api/categories`)
       .then(res => res.json())
       .then(res => { if (res.success) setCategories(res.data); });
   };
 
   const fetchAttributes = () => {
-    fetch('http://localhost:5000/api/attributes/brands')
+    fetch(`${window.API_URL}/api/attributes/brands`)
       .then(res => res.json())
       .then(res => { if (res.success) setBrands(res.data); });
 
-    fetch('http://localhost:5000/api/attributes/materials')
+    fetch(`${window.API_URL}/api/attributes/materials`)
       .then(res => res.json())
       .then(res => { if (res.success) setMaterials(res.data); });
 
-    fetch('http://localhost:5000/api/attributes/colors')
+    fetch(`${window.API_URL}/api/attributes/colors`)
       .then(res => res.json())
       .then(res => { if (res.success) setColors(res.data); });
   };
 
   const fetchBanners = () => {
-    fetch('http://localhost:5000/api/admin/banners')
+    fetch(`${window.API_URL}/api/admin/banners`)
       .then(res => res.json())
       .then(res => { if (res.success) setBanners(res.data); });
   };
 
   const fetchContactDetails = () => {
-    fetch('http://localhost:5000/api/admin/contact')
+    fetch(`${window.API_URL}/api/admin/contact`)
       .then(res => res.json())
       .then(res => { if (res.success && res.data) setContact(res.data); });
   };
 
   const fetchSEO = () => {
-    fetch('http://localhost:5000/api/admin/seo')
+    fetch(`${window.API_URL}/api/admin/seo`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
@@ -191,7 +191,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   };
 
   const fetchReviews = () => {
-    fetch('http://localhost:5000/api/products/admin/reviews', {
+    fetch(`${window.API_URL}/api/products/admin/reviews`, {
       headers: { 'Authorization': `Bearer ${adminToken}` }
     })
       .then(res => res.json())
@@ -199,7 +199,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   };
 
   const fetchRegisteredUsers = () => {
-    fetch('http://localhost:5000/api/admin/users', {
+    fetch(`${window.API_URL}/api/admin/users`, {
       headers: { 'Authorization': `Bearer ${adminToken}` }
     })
       .then(res => res.json())
@@ -215,7 +215,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
 
   const fetchOrders = () => {
     setLoadingOrders(true);
-    fetch('http://localhost:5000/api/orders/admin', {
+    fetch(`${window.API_URL}/api/orders/admin`, {
       headers: { 'Authorization': `Bearer ${adminToken}` }
     })
       .then(res => res.json())
@@ -232,7 +232,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   };
 
   const handleOrderStatusChange = (orderId, newStatus) => {
-    fetch(`http://localhost:5000/api/orders/admin/${orderId}/status`, {
+    fetch(`${window.API_URL}/api/orders/admin/${orderId}/status`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -471,14 +471,14 @@ export default function AdminDashboard({ adminToken, onLogout }) {
       let response;
       if (editingProduct) {
         // EDIT
-        response = await fetch(`http://localhost:5000/api/products/${editingProduct.id}`, {
+        response = await fetch(`${window.API_URL}/api/products/${editingProduct.id}`, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${adminToken}` },
           body: formData
         });
       } else {
         // ADD
-        response = await fetch('http://localhost:5000/api/products', {
+        response = await fetch(`${window.API_URL}/api/products`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${adminToken}` },
           body: formData
@@ -503,7 +503,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleDeleteProduct = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const response = await fetch(`${window.API_URL}/api/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${adminToken}` }
       });
@@ -523,7 +523,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleClearProductImages = async (id) => {
     if (!window.confirm('Are you sure you want to delete all current images for this product?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}/images`, {
+      const response = await fetch(`${window.API_URL}/api/products/${id}/images`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${adminToken}` }
       });
@@ -551,14 +551,14 @@ export default function AdminDashboard({ adminToken, onLogout }) {
       let response;
       if (editingCategory) {
         // EDIT
-        response = await fetch(`http://localhost:5000/api/categories/${editingCategory.id}`, {
+        response = await fetch(`${window.API_URL}/api/categories/${editingCategory.id}`, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${adminToken}` },
           body: formData
         });
       } else {
         // ADD
-        response = await fetch('http://localhost:5000/api/categories', {
+        response = await fetch(`${window.API_URL}/api/categories`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${adminToken}` },
           body: formData
@@ -599,7 +599,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleDeleteCategory = async (id) => {
     if (!window.confirm('Delete category? Warning: Subcategories and products mapped might fail or lose association.')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/categories/${id}`, {
+      const response = await fetch(`${window.API_URL}/api/categories/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${adminToken}` }
       });
@@ -622,15 +622,15 @@ export default function AdminDashboard({ adminToken, onLogout }) {
     if (type === 'brand') {
       if (!newBrandName) return;
       body = { name: newBrandName };
-      url = 'http://localhost:5000/api/attributes/brands';
+      url = `${window.API_URL}/api/attributes/brands`;
     } else if (type === 'material') {
       if (!newMaterialName) return;
       body = { name: newMaterialName };
-      url = 'http://localhost:5000/api/attributes/materials';
+      url = `${window.API_URL}/api/attributes/materials`;
     } else if (type === 'color') {
       if (!newColorName || !newColorCode) return;
       body = { name: newColorName, code: newColorCode };
-      url = 'http://localhost:5000/api/attributes/colors';
+      url = `${window.API_URL}/api/attributes/colors`;
     }
 
     try {
@@ -658,7 +658,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
 
   const handleDeleteAttribute = async (id, type) => {
     if (!window.confirm('Delete this attribute?')) return;
-    let url = `http://localhost:5000/api/attributes/${type}s/${id}`;
+    let url = `${window.API_URL}/api/attributes/${type}s/${id}`;
     try {
       const response = await fetch(url, {
         method: 'DELETE',
@@ -686,7 +686,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
     formData.append('image', banImage);
 
     try {
-      const response = await fetch('http://localhost:5000/api/admin/banners', {
+      const response = await fetch(`${window.API_URL}/api/admin/banners`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${adminToken}` },
         body: formData
@@ -708,7 +708,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleDeleteBanner = async (id) => {
     if (!window.confirm('Remove banner slide?')) return;
     try {
-      await fetch(`http://localhost:5000/api/admin/banners/${id}`, {
+      await fetch(`${window.API_URL}/api/admin/banners/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${adminToken}` }
       });
@@ -723,7 +723,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleSeoSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/seo', {
+      const response = await fetch(`${window.API_URL}/api/admin/seo`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -750,7 +750,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleContactSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/admin/contact', {
+      const response = await fetch(`${window.API_URL}/api/admin/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -772,7 +772,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
   const handleDeleteReview = async (id) => {
     if (!window.confirm('Delete this review permanently?')) return;
     try {
-      const response = await fetch(`http://localhost:5000/api/products/admin/reviews/${id}`, {
+      const response = await fetch(`${window.API_URL}/api/products/admin/reviews/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${adminToken}` }
       });
@@ -896,7 +896,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
                 <tbody>
                   {filteredProducts.map(p => {
                     const activePrice = p.sale_price ? parseFloat(p.sale_price) : parseFloat(p.price);
-                    const imgUrl = p.primary_image ? `http://localhost:5000${p.primary_image}` : 'https://placehold.co/50x50?text=Prod';
+                    const imgUrl = p.primary_image ? `${window.API_URL}${p.primary_image}` : 'https://placehold.co/50x50?text=Prod';
                     return (
                       <tr key={p.id} style={{ borderBottom: '1px solid var(--border)' }}>
                         <td style={{ padding: '12px' }}>
@@ -1196,7 +1196,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
                   </thead>
                   <tbody>
                     {banners.map(b => {
-                      const img = b.image_url.startsWith('/') ? `http://localhost:5000${b.image_url}` : b.image_url;
+                      const img = b.image_url.startsWith('/') ? `${window.API_URL}${b.image_url}` : b.image_url;
                       return (
                         <tr key={b.id} style={{ borderBottom: '1px solid var(--border)' }}>
                           <td style={{ padding: '10px' }}>

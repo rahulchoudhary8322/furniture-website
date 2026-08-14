@@ -30,7 +30,7 @@ export default function UserProfilePage({ userToken, user, onUserLogout, onUpdat
   // Fetch orders on mount
   useEffect(() => {
     if (!userToken) return;
-    fetch('http://localhost:5000/api/orders', {
+    fetch(`${window.API_URL}/api/orders`, {
       headers: { 'Authorization': `Bearer ${userToken}` }
     })
       .then(res => res.json())
@@ -64,7 +64,7 @@ export default function UserProfilePage({ userToken, user, onUserLogout, onUpdat
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/user/profile', {
+      const response = await fetch(`${window.API_URL}/api/user/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

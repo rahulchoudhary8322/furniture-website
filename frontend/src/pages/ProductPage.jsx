@@ -21,7 +21,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
   // Load product details
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5000/api/products/${slug}`)
+    fetch(`${window.API_URL}/api/products/${slug}`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
@@ -108,7 +108,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
     
     setZoomStyle({
       display: 'block',
-      backgroundImage: `url(${activeImage.startsWith('/') ? `http://localhost:5000${activeImage}` : activeImage})`,
+      backgroundImage: `url(${activeImage.startsWith('/') ? `${window.API_URL}${activeImage}` : activeImage})`,
       backgroundPosition: `${x}% ${y}%`,
       backgroundSize: '200%'
     });
@@ -124,7 +124,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
     if (!reviewName || !reviewComment) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${product.id}/reviews`, {
+      const response = await fetch(`${window.API_URL}/api/products/${product.id}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -140,7 +140,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
         setReviewComment('');
         setReviewRating(5);
         // Refresh reviews
-        const res = await fetch(`http://localhost:5000/api/products/${slug}`);
+        const res = await fetch(`${window.API_URL}/api/products/${slug}`);
         const fresh = await res.json();
         if (fresh.success) {
           setProduct(fresh.data);
@@ -167,7 +167,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
     }, 800);
   };
 
-  const currentActiveImgUrl = activeImage.startsWith('/') ? `http://localhost:5000${activeImage}` : activeImage;
+  const currentActiveImgUrl = activeImage.startsWith('/') ? `${window.API_URL}${activeImage}` : activeImage;
 
   // WhatsApp click template builder
   const whatsappUrl = `https://wa.me/919982827751?text=${encodeURIComponent(
@@ -191,7 +191,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
           {/* Thumbnails strip */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} className="pdp-thumbs-vertical">
             {product.images && product.images.map((img, i) => {
-              const thumbUrl = img.image_url.startsWith('/') ? `http://localhost:5000${img.image_url}` : img.image_url;
+              const thumbUrl = img.image_url.startsWith('/') ? `${window.API_URL}${img.image_url}` : img.image_url;
               return (
                 <button 
                   key={img.id}
@@ -448,7 +448,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
           // Fallback dummy A+ content for testing / visual wow factor
           if (!aplusData) {
             aplusData = {
-              banner_image: 'http://localhost:5000/uploads/cat-furniture.jpg',
+              banner_image: `${window.API_URL}/uploads/cat-furniture.jpg`,
               banner_title: 'Uncompromising Quality & Generational Craftsmanship',
               banner_subtitle: 'Artisanal Teak Wood Furniture Built to Stay in Your Family for Generations',
               story_title: 'Sustainably Harvested. Kiln-Dried. Expertly Hand-Carved.',
@@ -474,8 +474,8 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
             };
           }
 
-          const bannerImgUrl = aplusData.banner_image ? (aplusData.banner_image.startsWith('/') ? `http://localhost:5000${aplusData.banner_image}` : aplusData.banner_image) : 'https://placehold.co/1200x400/0a2a1b/ffffff?text=SDC+Premium+Banner';
-          const storyImgUrl = aplusData.story_image ? (aplusData.story_image.startsWith('/') ? `http://localhost:5000${aplusData.story_image}` : aplusData.story_image) : 'https://placehold.co/800x500/d49b28/ffffff?text=SDC+Story';
+          const bannerImgUrl = aplusData.banner_image ? (aplusData.banner_image.startsWith('/') ? `${window.API_URL}${aplusData.banner_image}` : aplusData.banner_image) : 'https://placehold.co/1200x400/0a2a1b/ffffff?text=SDC+Premium+Banner';
+          const storyImgUrl = aplusData.story_image ? (aplusData.story_image.startsWith('/') ? `${window.API_URL}${aplusData.story_image}` : aplusData.story_image) : 'https://placehold.co/800x500/d49b28/ffffff?text=SDC+Story';
 
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }} className="aplus-wrapper">
@@ -518,7 +518,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
                   <h4 style={{ fontSize: '1.3rem', fontFamily: "'Playfair Display', serif", color: 'var(--primary)', marginBottom: '24px', textAlign: 'center' }}>Detailed Feature Highlights</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(aplusData.features.length, 3)}, 1fr)`, gap: '30px' }} className="aplus-features-grid">
                     {aplusData.features.map((feat, i) => {
-                      const featImg = feat.image ? (feat.image.startsWith('/') ? `http://localhost:5000${feat.image}` : feat.image) : 'https://placehold.co/400x300?text=Feature';
+                      const featImg = feat.image ? (feat.image.startsWith('/') ? `${window.API_URL}${feat.image}` : feat.image) : 'https://placehold.co/400x300?text=Feature';
                       return (
                         <div key={i} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
                           <img src={featImg} alt={feat.title} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '4px' }} />

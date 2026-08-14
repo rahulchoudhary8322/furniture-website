@@ -1,8 +1,8 @@
 -- SDC Furniture & Electronic Canteen Database Setup
 
 -- Create Database if not exists
-CREATE DATABASE IF NOT EXISTS sdc_canteen;
-USE sdc_canteen;
+-- CREATE DATABASE IF NOT EXISTS sdc_canteen;
+-- USE sdc_canteen;
 
 -- 1. Admin Users
 CREATE TABLE IF NOT EXISTS admin_users (

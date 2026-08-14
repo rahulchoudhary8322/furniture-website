@@ -1,3 +1,4 @@
+// Force nodemon reload to read updated .env changes
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -9,8 +10,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Enable CORS for frontend requests
+const allowedOrigins = process.env.FRONTEND_URL || '*';
 app.use(cors({
-  origin: '*', // Allow all origins for local testing and deployment simplicity
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -40,8 +42,8 @@ app.get('/health', (req, res) => {
 // Start server after initializing the database
 async function startServer() {
   await initializeDatabase();
-  app.listen(PORT, () => {
-    console.log(`Backend API Server running at http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Backend API Server running at http://0.0.0.0:${PORT}`);
   });
 }
 

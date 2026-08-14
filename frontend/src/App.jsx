@@ -76,7 +76,7 @@ function SeoManager() {
     else if (location.pathname.startsWith('/shop')) pageName = 'shop';
 
     // 1. Fetch current SEO tags from backend
-    fetch('http://localhost:5000/api/admin/seo')
+    fetch(`${window.API_URL}/api/admin/seo`)
       .then(res => res.json())
       .then(res => {
         let meta = null;
@@ -163,7 +163,7 @@ export default function App() {
   // Read Wishlist from DB if customer userToken exists, otherwise fallback to local
   useEffect(() => {
     if (userToken) {
-      fetch('http://localhost:5000/api/wishlist', {
+      fetch(`${window.API_URL}/api/wishlist`, {
         headers: { 'Authorization': `Bearer ${userToken}` }
       })
         .then(res => res.json())
@@ -234,7 +234,7 @@ export default function App() {
     }
 
     // Toggle in DB
-    fetch('http://localhost:5000/api/wishlist/toggle', {
+    fetch(`${window.API_URL}/api/wishlist/toggle`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -272,7 +272,7 @@ export default function App() {
 
     // Sync any existing offline wishlist items with database
     const localWishlist = JSON.parse(localStorage.getItem('sdc_wishlist') || '[]');
-    fetch('http://localhost:5000/api/wishlist/sync', {
+    fetch(`${window.API_URL}/api/wishlist/sync`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

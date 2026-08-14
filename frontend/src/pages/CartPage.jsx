@@ -38,7 +38,7 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
       return;
     }
     // Fetch all products to match IDs
-    fetch('http://localhost:5000/api/products')
+    fetch(`${window.API_URL}/api/products`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
@@ -72,7 +72,7 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
       quantity: item.quantity
     }));
 
-    fetch('http://localhost:5000/api/orders', {
+    fetch(`${window.API_URL}/api/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
               {products.map(p => {
                 const activePrice = p.sale_price ? parseFloat(p.sale_price) : parseFloat(p.price);
                 const imageUrl = p.primary_image 
-                  ? (p.primary_image.startsWith('/') ? `http://localhost:5000${p.primary_image}` : p.primary_image)
+                  ? (p.primary_image.startsWith('/') ? `${window.API_URL}${p.primary_image}` : p.primary_image)
                   : 'https://placehold.co/100x100?text=Product';
 
                 return (

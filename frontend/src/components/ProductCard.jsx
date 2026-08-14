@@ -11,7 +11,7 @@ export default function ProductCard({ product, cart, wishlist, onAddToCart, onTo
   const discountPercent = salePrice ? Math.round(((price - salePrice) / price) * 100) : 0;
 
   const imageUrl = product.primary_image 
-    ? (product.primary_image.startsWith('/') ? `http://localhost:5000${product.primary_image}` : product.primary_image)
+    ? (product.primary_image.startsWith('/') ? `${window.API_URL}${product.primary_image}` : product.primary_image)
     : 'https://placehold.co/300x300?text=Product+Image';
 
   return (

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, ShieldAlert } from 'lucide-react';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function AdminLoginPage({ adminToken, onLoginSuccess }) {
   const [username, setUsername] = useState('');
@@ -24,11 +26,29 @@ export default function AdminLoginPage({ adminToken, onLoginSuccess }) {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/admin/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
+      let response;
+      if (auth && username.includes('@')) {
+        try {
+          const userCredential = await signInWithEmailAndPassword(auth, username, password);
+          const token = await userCredential.user.getIdToken();
+          response = await fetch(`${window.API_URL}/api/admin/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ firebaseToken: token })
+          });
+        } catch (firebaseErr) {
+          console.warn('Firebase admin login failed, falling back to database credentials:', firebaseErr.message);
+        }
+      }
+
+      if (!response) {
+        response = await fetch(`${window.API_URL}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+      }
+
       const data = await response.json();
       if (data.success) {
         onLoginSuccess(data.token, data.admin);

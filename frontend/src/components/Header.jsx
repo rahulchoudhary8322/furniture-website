@@ -10,7 +10,7 @@ export default function Header({ cart, wishlist, adminToken, onLogout, userToken
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/categories/tree')
+    fetch(`${window.API_URL}/api/categories/tree`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {

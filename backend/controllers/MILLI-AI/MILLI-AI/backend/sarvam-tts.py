@@ -2,9 +2,10 @@ import requests
 import json
 import sys
 import re
+import os
 
-# API Key (apna key yahan daal)
-API_KEY = "sk_6cvymwpd_TIpIyICas7AH2wzcM8uOwjwY"
+# API Key (loaded dynamically from environment)
+API_KEY = os.environ.get("SARVAM_API_KEY", "")
 
 def clean_text(text):
     # Remove emojis

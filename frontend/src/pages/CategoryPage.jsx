@@ -33,19 +33,19 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
 
   // 1. Fetch Master Filter Attributes on Mount
   useEffect(() => {
-    fetch('http://localhost:5000/api/categories')
+    fetch(`${window.API_URL}/api/categories`)
       .then(res => res.json())
       .then(res => { if (res.success) setCategories(res.data); });
 
-    fetch('http://localhost:5000/api/attributes/brands')
+    fetch(`${window.API_URL}/api/attributes/brands`)
       .then(res => res.json())
       .then(res => { if (res.success) setBrands(res.data); });
 
-    fetch('http://localhost:5000/api/attributes/materials')
+    fetch(`${window.API_URL}/api/attributes/materials`)
       .then(res => res.json())
       .then(res => { if (res.success) setMaterials(res.data); });
 
-    fetch('http://localhost:5000/api/attributes/colors')
+    fetch(`${window.API_URL}/api/attributes/colors`)
       .then(res => res.json())
       .then(res => { if (res.success) setColors(res.data); });
   }, []);
@@ -92,7 +92,7 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
 
   // 2. Fetch filtered products whenever active filters or URL query changes
   useEffect(() => {
-    let url = new URL('http://localhost:5000/api/products');
+    let url = new URL(`${window.API_URL}/api/products`);
 
     if (currentCategorySlug) url.searchParams.append('category', currentCategorySlug);
     if (searchKeyword) url.searchParams.append('search', searchKeyword);
@@ -424,7 +424,7 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
             {subcategories.map(sub => {
               const isActive = currentCategorySlug === sub.slug;
               const subImg = sub.image_url 
-                ? (sub.image_url.startsWith('/') ? `http://localhost:5000${sub.image_url}` : sub.image_url)
+                ? (sub.image_url.startsWith('/') ? `${window.API_URL}${sub.image_url}` : sub.image_url)
                 : 'https://placehold.co/100x100?text=Subcat';
               return (
                 <button
@@ -487,7 +487,7 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
             <div className="grid-3" style={{ gap: '20px' }}>
               {subcategories.map(sub => {
                 const subImg = sub.image_url 
-                  ? (sub.image_url.startsWith('/') ? `http://localhost:5000${sub.image_url}` : sub.image_url)
+                  ? (sub.image_url.startsWith('/') ? `${window.API_URL}${sub.image_url}` : sub.image_url)
                   : 'https://placehold.co/300x300?text=Subcategory';
                 return (
                   <div 

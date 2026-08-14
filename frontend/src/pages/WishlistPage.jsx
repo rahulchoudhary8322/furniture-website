@@ -11,7 +11,7 @@ export default function WishlistPage({ wishlist, cart, onAddToCart, onToggleWish
       setProducts([]);
       return;
     }
-    fetch('http://localhost:5000/api/products')
+    fetch(`${window.API_URL}/api/products`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
