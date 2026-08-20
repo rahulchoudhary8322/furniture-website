@@ -119,7 +119,7 @@ export default function UserProfilePage({ userToken, user, onUserLogout, onUpdat
             {user.username.slice(0, 2).toUpperCase()}
           </div>
           
-          <h3 style={{ fontSize: '1.25rem', fontFamily: "'Playfair Display', serif" }}>{user.full_name || user.username}</h3>
+          <h3 style={{ fontSize: '1.25rem', fontFamily: "'Outfit', sans-serif", fontWeight: '750' }}>{user.full_name || user.username}</h3>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '20px' }}>@{user.username}</p>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', textAlign: 'left', fontSize: '0.85rem', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
@@ -138,7 +138,7 @@ export default function UserProfilePage({ userToken, user, onUserLogout, onUpdat
           <button 
             onClick={() => { onUserLogout(); navigate('/'); }} 
             className="btn btn-outline" 
-            style={{ width: '100%', marginTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderColor: '#C84B31', color: '#C84B31' }}
+            style={{ width: '100%', marginTop: '30px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', borderColor: '#E11D48', color: '#E11D48' }}
           >
             <LogOut size={16} /> Sign Out
           </button>
@@ -146,7 +146,7 @@ export default function UserProfilePage({ userToken, user, onUserLogout, onUpdat
 
         {/* Update Form Card */}
         <div className="glass-panel" style={{ padding: '40px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontFamily: "'Playfair Display', serif", marginBottom: '25px', color: 'var(--primary)' }}>Update Profile & Address</h2>
+          <h2 style={{ fontSize: '1.5rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', marginBottom: '25px', color: '#0F172A' }}>Update Profile & Address</h2>
           
           {success && (
             <div style={{ display: 'flex', gap: '8px', padding: '12px', backgroundColor: '#E2F3EB', color: '#2E7D32', borderRadius: '8px', fontSize: '0.85rem', marginBottom: '20px', alignItems: 'center' }}>
@@ -255,7 +255,7 @@ export default function UserProfilePage({ userToken, user, onUserLogout, onUpdat
 
         {/* TAB 2 / CARD: ORDER HISTORY */}
         <div className="glass-panel profile-orders-section" style={{ padding: '30px' }}>
-          <h2 style={{ fontSize: '1.5rem', fontFamily: "'Playfair Display', serif", marginBottom: '20px', color: 'var(--primary)' }}>My Order History</h2>
+          <h2 style={{ fontSize: '1.5rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', marginBottom: '20px', color: '#0F172A' }}>My Order History</h2>
           
           {loadingOrders ? (
             <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Loading your orders...</p>

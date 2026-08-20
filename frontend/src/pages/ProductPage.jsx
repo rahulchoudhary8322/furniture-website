@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingCart, Send, Shield, Truck, Star, ArrowRight, MessageSquareCode } from 'lucide-react';
+import { Heart, ShoppingBag, Shield, Truck, Star, MessageSquare } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 
 export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishlist }) {
@@ -43,7 +43,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
   // Dynamic SEO metadata update when product loads
   useEffect(() => {
     if (product) {
-      document.title = `${product.name} - SDC Furniture & Electronic Canteen`;
+      document.title = `${product.name} - Anjana E-Commerce`;
 
       // Set Meta Description
       let descMeta = document.querySelector('meta[name="description"]');
@@ -52,7 +52,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
         descMeta.name = 'description';
         document.head.appendChild(descMeta);
       }
-      descMeta.content = `${product.name} at SDC Furniture & Electronic Canteen. ${product.description ? product.description.replace(/<[^>]*>/g, '').slice(0, 150) : ''} - Premium quality furniture and appliances in Rajasthan.`;
+      descMeta.content = `${product.name} at Anjana E-Commerce. ${product.description ? product.description.replace(/<[^>]*>/g, '').slice(0, 150) : ''} - Premium quality furniture and electronics.`;
 
       // Set Meta Keywords
       let keysMeta = document.querySelector('meta[name="keywords"]');
@@ -61,19 +61,19 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
         keysMeta.name = 'keywords';
         document.head.appendChild(keysMeta);
       }
-      keysMeta.content = `${product.name}, SDC Canteen, ${product.brand_name || ''}, buy ${product.name} online, premium furniture Rajasthan`;
+      keysMeta.content = `${product.name}, Anjana, ${product.brand_name || ''}, buy ${product.name} online, premium shopping`;
     }
   }, [product]);
 
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', color: 'var(--primary)' }}>Loading SDC premium details...</div>;
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh', color: '#0F172A', fontFamily: "'Outfit', sans-serif" }}>Loading premium details...</div>;
   }
 
   if (!product) {
     return (
-      <div style={{ textAlign: 'center', padding: '100px 24px', minHeight: '60vh' }}>
-        <h2>Product details could not be found.</h2>
-        <p style={{ margin: '15px 0' }}>It might have been removed or changed by the administrator.</p>
+      <div style={{ textAlign: 'center', padding: '100px 24px', minHeight: '60vh', fontFamily: "'Outfit', sans-serif" }}>
+        <h2 style={{ fontWeight: '800' }}>Product details could not be found.</h2>
+        <p style={{ margin: '15px 0', color: '#64748B' }}>It might have been removed or changed by the administrator.</p>
         <Link to="/shop" className="btn btn-primary">Go to Catalog</Link>
       </div>
     );
@@ -118,7 +118,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
     setZoomStyle({ display: 'none' });
   };
 
-  // Submit dynamic review
+  // Submit review
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!reviewName || !reviewComment) return;
@@ -154,7 +154,6 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
   // Buy Now trigger with Confetti animation
   const handleBuyNow = () => {
     onAddToCart(product.id, 1);
-    // Trigger Canvas Confetti
     if (window.confetti) {
       window.confetti({
         particleCount: 150,
@@ -171,15 +170,15 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
 
   // WhatsApp click template builder
   const whatsappUrl = `https://wa.me/919982827751?text=${encodeURIComponent(
-    `Hello SDC Canteen, I am interested in purchasing this product:\n\n*Product:* ${product.name}\n*SKU:* ${product.sku}\n*Price:* ₹${(salePrice || price).toLocaleString('en-IN')}\n\nPlease guide me with the billing, availability and delivery options.`
+    `Hello Anjana, I am interested in purchasing this product:\n\n*Product:* ${product.name}\n*SKU:* ${product.sku}\n*Price:* ₹${(salePrice || price).toLocaleString('en-IN')}\n\nPlease guide me with the availability and delivery options.`
   )}`;
 
   return (
-    <div className="container section-padding" style={{ animation: 'fadeIn 0.5s ease' }}>
+    <div className="container section-padding" style={{ animation: 'fadeIn 0.5s ease', padding: '40px 20px' }}>
       
       {/* Breadcrumbs */}
-      <div style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '30px' }}>
-        <Link to="/">Home</Link> &gt; <Link to={`/shop?category=${product.category_slug}`}>{product.category_name}</Link> &gt; <span style={{ color: 'var(--primary)', fontWeight: '600' }}>{product.name}</span>
+      <div style={{ fontSize: '0.82rem', color: '#64748B', marginBottom: '30px' }}>
+        <Link to="/">Home</Link> &gt; <Link to={`/shop?category=${product.category_slug}`}>{product.category_name}</Link> &gt; <span style={{ color: '#0F172A', fontWeight: '600' }}>{product.name}</span>
       </div>
 
       {/* Main product card panels */}
@@ -197,9 +196,9 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
                   key={img.id}
                   onClick={() => setActiveImage(img.image_url)}
                   style={{
-                    width: '64px', height: '64px', borderRadius: '4px', overflow: 'hidden',
-                    border: activeImage === img.image_url ? '2px solid var(--accent)' : '1px solid var(--border)',
-                    backgroundColor: '#FFF'
+                    width: '64px', height: '64px', borderRadius: '12px', overflow: 'hidden',
+                    border: activeImage === img.image_url ? '2px solid #E11D48' : '1px solid #E2E8F0',
+                    backgroundColor: '#FFF', cursor: 'pointer'
                   }}
                 >
                   <img src={thumbUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -209,9 +208,9 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
           </div>
 
           {/* Large image and magnifier window */}
-          <div style={{ flex: 1, position: 'relative', height: '420px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', overflow: 'hidden', backgroundColor: '#F0F2F1' }}>
+          <div style={{ flex: 1, position: 'relative', height: '420px', border: '1px solid #E2E8F0', borderRadius: '20px', overflow: 'hidden', backgroundColor: '#FAF9F6' }}>
             <img 
-              src={currentActiveImgUrl || 'https://placehold.co/600x600?text=Product'}
+              src={currentActiveImgUrl || 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80'}
               alt={product.name}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
@@ -232,60 +231,60 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           <div>
-            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: '700', letterSpacing: '1px' }}>
-              {product.brand_name || 'SDC Custom'}
+            <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', color: '#E11D48', fontWeight: '750', letterSpacing: '1px' }}>
+              {product.brand_name || 'Anjana Design'}
             </span>
-            <h1 style={{ fontSize: '2.2rem', fontFamily: "'Playfair Display', serif", fontWeight: '700', marginTop: '4px' }}>
+            <h1 style={{ fontSize: '2.2rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', marginTop: '4px', color: '#0F172A', lineHeight: '1.2' }}>
               {product.name}
             </h1>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>SKU: {product.sku}</span>
+            <span style={{ fontSize: '0.8rem', color: '#94A3B8' }}>SKU: {product.sku}</span>
           </div>
 
           {/* Rating */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ display: 'flex', color: 'var(--accent)' }}>
+            <div style={{ display: 'flex', color: '#F59E0B' }}>
               {[...Array(5)].map((_, i) => (
-                <Star key={i} size={16} fill={i < Math.floor(product.rating || 5) ? 'var(--accent)' : 'none'} />
+                <Star key={i} size={16} fill={i < Math.floor(product.rating || 5) ? '#F59E0B' : 'none'} stroke={i < Math.floor(product.rating || 5) ? '#F59E0B' : '#CBD5E1'} />
               ))}
             </div>
-            <span style={{ fontSize: '0.88rem', fontWeight: '600' }}>({product.rating || '5.0'})</span>
-            <span style={{ color: 'var(--border)' }}>|</span>
-            <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{product.reviews ? product.reviews.length : 0} Reviews</span>
+            <span style={{ fontSize: '0.88rem', fontWeight: '700', color: '#0F172A' }}>({product.rating || '5.0'})</span>
+            <span style={{ color: '#E2E8F0' }}>|</span>
+            <span style={{ fontSize: '0.85rem', color: '#64748B' }}>{product.reviews ? product.reviews.length : 0} Reviews</span>
           </div>
 
           {/* Pricing */}
-          <div style={{ padding: '16px', backgroundColor: 'var(--bg)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ padding: '18px 24px', backgroundColor: '#FAF4ED', borderRadius: '16px', display: 'flex', alignItems: 'center', gap: '20px' }}>
             {salePrice ? (
               <>
-                <span style={{ fontSize: '2rem', fontWeight: '800', color: '#C84B31' }}>
-                  ₹{salePrice.toLocaleString('en-IN')}
+                <span style={{ fontSize: '2rem', fontWeight: '800', color: '#E11D48' }}>
+                  ₹{salePrice.toLocaleString('en-IN')}/-
                 </span>
-                <span style={{ fontSize: '1.2rem', textDecoration: 'line-through', color: 'var(--text-muted)' }}>
-                  ₹{price.toLocaleString('en-IN')}
+                <span style={{ fontSize: '1.2rem', textDecoration: 'line-through', color: '#94A3B8' }}>
+                  ₹{price.toLocaleString('en-IN')}/-
                 </span>
-                <span className="badge badge-sale" style={{ fontSize: '0.8rem', padding: '6px 12px' }}>
+                <span className="badge badge-sale" style={{ fontSize: '0.75rem', padding: '4px 10px' }}>
                   Save {discountPercent}%
                 </span>
               </>
             ) : (
-              <span style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--primary)' }}>
-                ₹{price.toLocaleString('en-IN')}
+              <span style={{ fontSize: '2rem', fontWeight: '800', color: '#0F172A' }}>
+                ₹{price.toLocaleString('en-IN')}/-
               </span>
             )}
           </div>
 
           {/* Short description */}
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.5' }}>
+          <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: '1.6' }}>
             {product.description}
           </p>
 
           {/* Stock state */}
-          <div style={{ fontSize: '0.88rem' }}>
+          <div style={{ fontSize: '0.88rem', color: '#0F172A', fontWeight: '500' }}>
             <span>Availability: </span>
             {product.stock > 0 ? (
-              <span style={{ color: '#2E7D32', fontWeight: '600' }}>In Stock ({product.stock} left)</span>
+              <span style={{ color: '#059669', fontWeight: '700' }}>In Stock ({product.stock} left)</span>
             ) : (
-              <span style={{ color: '#C84B31', fontWeight: '600' }}>Out of Stock</span>
+              <span style={{ color: '#E11D48', fontWeight: '700' }}>Out of Stock</span>
             )}
           </div>
 
@@ -295,15 +294,15 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
               disabled={product.stock <= 0}
               onClick={() => onAddToCart(product.id, 1)}
               className="btn btn-outline"
-              style={{ padding: '14px', borderRadius: '8px' }}
+              style={{ padding: '14px', borderRadius: '9999px', justifyContent: 'center' }}
             >
-              <ShoppingCart size={18} /> Add to Cart
+              <ShoppingBag size={18} /> Add to Cart
             </button>
             <button 
               disabled={product.stock <= 0}
               onClick={handleBuyNow}
               className="btn btn-primary"
-              style={{ padding: '14px', borderRadius: '8px' }}
+              style={{ padding: '14px', borderRadius: '9999px', justifyContent: 'center' }}
             >
               Buy Now
             </button>
@@ -315,9 +314,9 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
             target="_blank" 
             rel="noreferrer"
             className="btn whatsapp-btn"
-            style={{ width: '100%', padding: '14px', borderRadius: '8px', gap: '8px' }}
+            style={{ width: '100%', padding: '14px', borderRadius: '9999px', gap: '8px', textDecoration: 'none', justifyContent: 'center' }}
           >
-            <MessageSquareCode size={18} /> Order Directly on WhatsApp
+            <MessageSquare size={18} /> Order Directly on WhatsApp
           </a>
 
           {/* External Amazon / Flipkart buttons */}
@@ -332,14 +331,14 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                     backgroundColor: '#FF9900', color: '#000000', fontWeight: '750',
-                    padding: '12px 14px', borderRadius: '8px', border: 'none', transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(255, 153, 0, 0.2)', textDecoration: 'none', cursor: 'pointer'
+                    padding: '12px 14px', borderRadius: '9999px', border: 'none', transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 12px rgba(255, 153, 0, 0.15)', textDecoration: 'none', cursor: 'pointer'
                   }}
                   onMouseOver={(e) => { e.currentTarget.style.opacity = 0.9; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                   onMouseOut={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon" style={{ height: '14px' }} />
-                  <span style={{ fontSize: '0.82rem' }}>Buy on Amazon</span>
+                  <span style={{ fontSize: '0.82rem' }}>Amazon</span>
                 </a>
               )}
               {product.flipkart_link && (
@@ -351,28 +350,28 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
                   style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                     backgroundColor: '#2874F0', color: '#FFFFFF', fontWeight: '750',
-                    padding: '12px 14px', borderRadius: '8px', border: 'none', transition: 'all 0.3s ease',
-                    boxShadow: '0 4px 12px rgba(40, 116, 240, 0.2)', textDecoration: 'none', cursor: 'pointer'
+                    padding: '12px 14px', borderRadius: '9999px', border: 'none', transition: 'all 0.3s ease',
+                    boxShadow: '0 4px 12px rgba(40, 116, 240, 0.15)', textDecoration: 'none', cursor: 'pointer'
                   }}
                   onMouseOver={(e) => { e.currentTarget.style.opacity = 0.9; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                   onMouseOut={(e) => { e.currentTarget.style.opacity = 1; e.currentTarget.style.transform = 'translateY(0)'; }}
                 >
                   <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Flipkart_logo.svg" alt="Flipkart" style={{ height: '16px' }} />
-                  <span style={{ fontSize: '0.82rem' }}>Buy on Flipkart</span>
+                  <span style={{ fontSize: '0.82rem' }}>Flipkart</span>
                 </a>
               )}
             </div>
           )}
 
           {/* Trust points */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid var(--border)', paddingTop: '20px', marginTop: '10px' }}>
-            <div style={{ display: 'flex', gap: '10px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              <Shield size={16} style={{ color: 'var(--accent)' }} />
-              <span>**Warranty Support:** {product.warranty || '1 Year Store Warranty'}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', borderTop: '1px solid #E2E8F0', paddingTop: '20px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '0.85rem', color: '#64748B' }}>
+              <Shield size={16} style={{ color: '#E11D48' }} />
+              <span><strong>Warranty Support:</strong> {product.warranty || '1 Year Store Warranty'}</span>
             </div>
-            <div style={{ display: 'flex', gap: '10px', fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-              <Truck size={16} style={{ color: 'var(--accent)' }} />
-              <span>**Delivery Timeline:** {product.delivery_info}</span>
+            <div style={{ display: 'flex', gap: '10px', fontSize: '0.85rem', color: '#64748B' }}>
+              <Truck size={16} style={{ color: '#E11D48' }} />
+              <span><strong>Delivery Timeline:</strong> {product.delivery_info}</span>
             </div>
           </div>
 
@@ -380,8 +379,8 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
       </div>
 
       {/* Tabs / Specifications grid */}
-      <section style={{ marginBottom: '80px' }}>
-        <h3 style={{ fontSize: '1.4rem', borderBottom: '2px solid var(--primary)', paddingBottom: '10px', marginBottom: '24px' }}>
+      <section style={{ marginBottom: '80px', marginTop: '40px' }}>
+        <h3 style={{ fontSize: '1.4rem', borderBottom: '2px solid #0F172A', paddingBottom: '10px', marginBottom: '24px', fontWeight: '800', color: '#0F172A', fontFamily: "'Outfit', sans-serif" }}>
           Specifications & Key Features
         </h3>
         
@@ -389,49 +388,49 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
           
           {/* Spec details list */}
           <div>
-            <h4 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Specifications</h4>
+            <h4 style={{ fontSize: '1.1rem', marginBottom: '16px', fontWeight: '700', color: '#0F172A' }}>Specifications</h4>
             {Object.keys(specsObj).length > 0 ? (
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
                 <tbody>
                   {Object.entries(specsObj).map(([key, val]) => (
-                    <tr key={key} style={{ borderBottom: '1px solid var(--border)' }}>
-                      <td style={{ padding: '10px 0', fontWeight: '600', color: 'var(--primary)', width: '40%' }}>{key}</td>
-                      <td style={{ padding: '10px 0', color: 'var(--text-muted)' }}>{val}</td>
+                    <tr key={key} style={{ borderBottom: '1px solid #F1F5F9' }}>
+                      <td style={{ padding: '12px 0', fontWeight: '600', color: '#0F172A', width: '40%' }}>{key}</td>
+                      <td style={{ padding: '12px 0', color: '#64748B' }}>{val}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No technical specs listed.</p>
+              <p style={{ color: '#64748B', fontSize: '0.9rem' }}>No technical specs listed.</p>
             )}
           </div>
 
           {/* Features check list */}
           <div>
-            <h4 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Features</h4>
+            <h4 style={{ fontSize: '1.1rem', marginBottom: '16px', fontWeight: '700', color: '#0F172A' }}>Features</h4>
             {featuresArr.length > 0 ? (
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', padding: 0 }}>
                 {featuresArr.map((feat, idx) => (
-                  <li key={idx} style={{ display: 'flex', gap: '8px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                    <span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>✓</span>
+                  <li key={idx} style={{ display: 'flex', gap: '8px', fontSize: '0.9rem', color: '#64748B' }}>
+                    <span style={{ color: '#E11D48', fontWeight: 'bold' }}>✓</span>
                     <span>{feat}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>Quality assured by SDC team.</p>
+              <p style={{ color: '#64748B', fontSize: '0.9rem' }}>Quality assured by Anjana team.</p>
             )}
           </div>
 
         </div>
       </section>
 
-      {/* 8. Amazon-Style Premium A+ Content */}
-      <section style={{ marginBottom: '80px', borderTop: '1px solid var(--border)', paddingTop: '50px' }}>
+      {/* Premium A+ Content */}
+      <section style={{ marginBottom: '80px', borderTop: '1px solid #E2E8F0', paddingTop: '50px' }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <span style={{ color: 'var(--accent)', fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Premium Showcase</span>
-          <h2 style={{ fontSize: '2rem', fontFamily: "'Playfair Display', serif", marginTop: '5px' }}>Product A+ Rich Details</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '600px', margin: '8px auto 0 auto' }}>Explore the build quality, materials, and specialized engineering behind SDC Furniture & Electronics.</p>
+          <span style={{ color: '#E11D48', fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Premium Showcase</span>
+          <h2 style={{ fontSize: '2rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', marginTop: '5px', color: '#0F172A' }}>Product A+ Rich Details</h2>
+          <p style={{ color: '#64748B', fontSize: '0.9rem', maxWidth: '600px', margin: '8px auto 0 auto' }}>Explore the build quality, materials, and specialized engineering behind Anjana products.</p>
         </div>
 
         {/* A+ Content Blocks */}
@@ -448,47 +447,47 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
           // Fallback dummy A+ content for testing / visual wow factor
           if (!aplusData) {
             aplusData = {
-              banner_image: `${window.API_URL}/uploads/cat-furniture.jpg`,
-              banner_title: 'Uncompromising Quality & Generational Craftsmanship',
-              banner_subtitle: 'Artisanal Teak Wood Furniture Built to Stay in Your Family for Generations',
-              story_title: 'Sustainably Harvested. Kiln-Dried. Expertly Hand-Carved.',
-              story_desc: 'At SDC Canteen, we select only the finest grade of Indian Sheesham (Rosewood) and seasoned Teak Wood. Our lumber goes through a multi-stage seasoning process in modern kiln chambers to lower moisture contents to 8-12%, preventing seasonal warping, cracking, or joint split. Every contour is hand-carved by local traditional artisans in Churu, keeping heritage alive.',
+              banner_image: 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80',
+              banner_title: 'Uncompromising Quality & Craftsmanship',
+              banner_subtitle: 'Built to stay in your family for generations',
+              story_title: 'Sustainably Harvested. Kiln-Dried. Expertly Finished.',
+              story_desc: 'At Anjana, we select only the finest grade of Indian Sheesham (Rosewood) and seasoned Teak Wood. Our lumber goes through a multi-stage seasoning process in modern kiln chambers to prevent seasonal warping or cracking. Every contour is crafted by master artisans, keeping heritage alive.',
               story_image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
               features: [
                 {
                   title: 'Heavy Duty Structural Durability',
-                  desc: 'Reinforced with double-tenon mortise joint blocks and industrial grade German adhesives. Supports up to 450kg load without structural squeaking.',
+                  desc: 'Reinforced with solid joint blocks and industrial grade adhesives. Supports heavy loads without structural squeaking.',
                   image: 'https://images.unsplash.com/photo-1581428982868-e410dd047a90?auto=format&fit=crop&w=400&q=80'
                 },
                 {
-                  title: 'Eco-Friendly Non-Toxic VOC Finish',
-                  desc: 'Finished with organic, lead-free Italian polyurethane sealers. Safe for children, pets, and indoor allergen safety guidelines.',
+                  title: 'Eco-Friendly Non-Toxic Finish',
+                  desc: 'Finished with organic, lead-free Italian polyurethane sealers. Safe for indoor allergen safety guidelines.',
                   image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=400&q=80'
                 },
                 {
                   title: 'Authorised Multi-Brand Electronics',
-                  desc: 'Equipped with heavy copper coil transformers, dynamic inverter compressors, and original manufacturer warranties for electronic catalogs.',
+                  desc: 'Equipped with heavy copper coil transformers, dynamic inverter compressors, and manufacturer warranties.',
                   image: 'https://images.unsplash.com/photo-1546054454-aa26e2b734c7?auto=format&fit=crop&w=400&q=80'
                 }
               ]
             };
           }
 
-          const bannerImgUrl = aplusData.banner_image ? (aplusData.banner_image.startsWith('/') ? `${window.API_URL}${aplusData.banner_image}` : aplusData.banner_image) : 'https://placehold.co/1200x400/0a2a1b/ffffff?text=SDC+Premium+Banner';
-          const storyImgUrl = aplusData.story_image ? (aplusData.story_image.startsWith('/') ? `${window.API_URL}${aplusData.story_image}` : aplusData.story_image) : 'https://placehold.co/800x500/d49b28/ffffff?text=SDC+Story';
+          const bannerImgUrl = aplusData.banner_image ? (aplusData.banner_image.startsWith('/') ? `${window.API_URL}${aplusData.banner_image}` : aplusData.banner_image) : 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80';
+          const storyImgUrl = aplusData.story_image ? (aplusData.story_image.startsWith('/') ? `${window.API_URL}${aplusData.story_image}` : aplusData.story_image) : 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80';
 
           return (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }} className="aplus-wrapper">
               
               {/* 1. Large Banner Block */}
-              <div style={{ position: 'relative', height: '350px', borderRadius: 'var(--radius-lg)', overflow: 'hidden', backgroundColor: 'var(--primary)' }} className="aplus-banner">
+              <div style={{ position: 'relative', height: '350px', borderRadius: '24px', overflow: 'hidden', backgroundColor: '#0F172A' }} className="aplus-banner">
                 <div style={{
                   position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                  backgroundImage: `linear-gradient(to bottom, rgba(10,42,27,0.85) 0%, rgba(10,42,27,0.5) 100%), url(${bannerImgUrl})`,
+                  backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.5) 100%), url(${bannerImgUrl})`,
                   backgroundSize: 'cover', backgroundPosition: 'center'
                 }} />
                 <div style={{ position: 'relative', zIndex: 10, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center', padding: '24px', color: '#FFFFFF' }}>
-                  <h3 style={{ fontSize: '2rem', fontFamily: "'Playfair Display', serif", color: 'var(--accent)', marginBottom: '10px' }}>{aplusData.banner_title}</h3>
+                  <h3 style={{ fontSize: '2rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#FFEBE7', marginBottom: '10px' }}>{aplusData.banner_title}</h3>
                   <p style={{ fontSize: '1.05rem', maxWidth: '750px', opacity: 0.95, fontWeight: '300' }}>{aplusData.banner_subtitle}</p>
                 </div>
               </div>
@@ -496,35 +495,27 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
               {/* 2. Brand Story split block */}
               <div className="aplus-story-grid" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '40px', alignItems: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                  <h4 style={{ fontSize: '1.5rem', color: 'var(--primary)', fontFamily: "'Playfair Display', serif" }}>{aplusData.story_title}</h4>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.96rem', lineHeight: '1.6', whiteSpace: 'pre-line' }}>{aplusData.story_desc}</p>
-                  <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'bold' }}>
-                      <span style={{ backgroundColor: 'var(--accent-light)', color: 'var(--primary)', padding: '6px 12px', borderRadius: '4px' }}>🛡️ PREMIUM LUMBER</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--primary)', fontWeight: 'bold' }}>
-                      <span style={{ backgroundColor: 'var(--accent-light)', color: 'var(--primary)', padding: '6px 12px', borderRadius: '4px' }}>⚙️ EXPERT ASSEMBLY</span>
-                    </div>
-                  </div>
+                  <h4 style={{ fontSize: '1.5rem', color: '#0F172A', fontWeight: '800', fontFamily: "'Outfit', sans-serif" }}>{aplusData.story_title}</h4>
+                  <p style={{ color: '#64748B', fontSize: '0.96rem', lineHeight: '1.6', whiteSpace: 'pre-line' }}>{aplusData.story_desc}</p>
                 </div>
                 <div>
-                  <img src={storyImgUrl} alt="SDC Lumber Workshop" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow)' }} />
+                  <img src={storyImgUrl} alt="Anjana workshop" style={{ width: '100%', height: '300px', objectFit: 'cover', borderRadius: '16px', boxShadow: '0 4px 15px rgba(0,0,0,0.02)' }} />
                 </div>
               </div>
 
               {/* 3. Three-Column Features Card Row */}
               {aplusData.features && aplusData.features.length > 0 && (
                 <div>
-                  <h4 style={{ fontSize: '1.3rem', fontFamily: "'Playfair Display', serif", color: 'var(--primary)', marginBottom: '24px', textAlign: 'center' }}>Detailed Feature Highlights</h4>
+                  <h4 style={{ fontSize: '1.3rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A', marginBottom: '24px', textAlign: 'center' }}>Detailed Feature Highlights</h4>
                   <div style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(aplusData.features.length, 3)}, 1fr)`, gap: '30px' }} className="aplus-features-grid">
                     {aplusData.features.map((feat, i) => {
-                      const featImg = feat.image ? (feat.image.startsWith('/') ? `${window.API_URL}${feat.image}` : feat.image) : 'https://placehold.co/400x300?text=Feature';
+                      const featImg = feat.image ? (feat.image.startsWith('/') ? `${window.API_URL}${feat.image}` : feat.image) : 'https://images.unsplash.com/photo-1581428982868-e410dd047a90?auto=format&fit=crop&w=400&q=80';
                       return (
-                        <div key={i} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                          <img src={featImg} alt={feat.title} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '4px' }} />
+                        <div key={i} className="glass-panel" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '15px', borderRadius: '16px' }}>
+                          <img src={featImg} alt={feat.title} style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '12px' }} />
                           <div>
-                            <h5 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--primary)', marginBottom: '8px' }}>{feat.title}</h5>
-                            <p style={{ fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>{feat.desc}</p>
+                            <h5 style={{ fontSize: '1.05rem', fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>{feat.title}</h5>
+                            <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: '1.5' }}>{feat.desc}</p>
                           </div>
                         </div>
                       );
@@ -540,7 +531,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
 
       {/* Reviews Section */}
       <section style={{ marginBottom: '80px' }}>
-        <h3 style={{ fontSize: '1.4rem', borderBottom: '2px solid var(--primary)', paddingBottom: '10px', marginBottom: '24px' }}>
+        <h3 style={{ fontSize: '1.4rem', borderBottom: '2px solid #0F172A', paddingBottom: '10px', marginBottom: '24px', fontWeight: '800', color: '#0F172A', fontFamily: "'Outfit', sans-serif" }}>
           Customer Reviews ({product.reviews ? product.reviews.length : 0})
         </h3>
 
@@ -550,31 +541,31 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {product.reviews && product.reviews.length > 0 ? (
               product.reviews.map(rev => (
-                <div key={rev.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: '15px' }}>
+                <div key={rev.id} style={{ borderBottom: '1px solid #F1F5F9', paddingBottom: '15px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                    <h4 style={{ fontSize: '0.95rem', fontWeight: '700' }}>{rev.customer_name}</h4>
-                    <div style={{ display: 'flex', color: 'var(--accent)' }}>
+                    <h4 style={{ fontSize: '0.95rem', fontWeight: '700', color: '#0F172A' }}>{rev.customer_name}</h4>
+                    <div style={{ display: 'flex', color: '#F59E0B' }}>
                       {[...Array(rev.rating)].map((_, i) => (
-                        <Star key={i} size={12} fill="var(--accent)" />
+                        <Star key={i} size={12} fill="#F59E0B" stroke="#F59E0B" />
                       ))}
                     </div>
                   </div>
-                  <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>"{rev.comment}"</p>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', opacity: 0.8, display: 'block', marginTop: '6px' }}>
+                  <p style={{ fontSize: '0.88rem', color: '#64748B' }}>"{rev.comment}"</p>
+                  <span style={{ fontSize: '0.75rem', color: '#94A3B8', display: 'block', marginTop: '6px' }}>
                     {new Date(rev.created_at).toLocaleDateString()}
                   </span>
                 </div>
               ))
             ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>No reviews yet for this product. Be the first to share your experience!</p>
+              <p style={{ color: '#64748B', fontSize: '0.9rem' }}>No reviews yet for this product. Be the first to share your experience!</p>
             )}
           </div>
 
           {/* Submit Review Form */}
-          <div className="glass-panel" style={{ padding: '24px' }}>
-            <h4 style={{ fontSize: '1.1rem', marginBottom: '16px' }}>Write a Review</h4>
+          <div style={{ padding: '24px', backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.01)' }}>
+            <h4 style={{ fontSize: '1.1rem', marginBottom: '16px', fontWeight: '800', color: '#0F172A' }}>Write a Review</h4>
             {reviewSuccess ? (
-              <div style={{ color: '#2E7D32', fontSize: '0.9rem', textAlign: 'center', padding: '20px 0' }}>
+              <div style={{ color: '#059669', fontSize: '0.9rem', textAlign: 'center', padding: '20px 0', fontWeight: '600' }}>
                 Thank you! Your review has been added successfully and is now visible.
               </div>
             ) : (
@@ -593,11 +584,12 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
                 </div>
                 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Rating</label>
+                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: '#0F172A' }}>Rating</label>
                   <select 
                     value={reviewRating}
                     onChange={(e) => setReviewRating(parseInt(e.target.value))}
                     className="form-control"
+                    style={{ borderRadius: '12px' }}
                   >
                     <option value="5">5 Stars (Excellent)</option>
                     <option value="4">4 Stars (Good)</option>
@@ -621,7 +613,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center' }}>
                   Submit Review
                 </button>
               </form>
@@ -634,7 +626,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
       {/* Related Products Grid */}
       {product.related && product.related.length > 0 && (
         <section>
-          <h3 style={{ fontSize: '1.4rem', borderBottom: '2px solid var(--primary)', paddingBottom: '10px', marginBottom: '24px' }}>
+          <h3 style={{ fontSize: '1.4rem', borderBottom: '2px solid #0F172A', paddingBottom: '10px', marginBottom: '24px', fontWeight: '800', color: '#0F172A', fontFamily: "'Outfit', sans-serif" }}>
             Related Products
           </h3>
           <div className="grid-4">
@@ -686,7 +678,7 @@ export default function ProductPage({ cart, wishlist, onAddToCart, onToggleWishl
         }
         .pdp-thumbs-vertical button:hover {
           transform: scale(1.05);
-          border-color: var(--accent) !important;
+          border-color: #E11D48 !important;
         }
         @media (max-width: 991px) {
           .pdp-main-grid {

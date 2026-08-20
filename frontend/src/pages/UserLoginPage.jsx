@@ -245,10 +245,10 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
         </div>
 
         <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-          <h2 style={{ fontSize: '1.6rem', fontFamily: "'Playfair Display', serif", color: 'var(--primary)' }}>
-            {isLoginTab ? 'Welcome Back!' : 'Join SDC Canteen'}
+          <h2 style={{ fontSize: '1.6rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A' }}>
+            {isLoginTab ? 'Welcome Back!' : 'Join Anjana'}
           </h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+          <p style={{ fontSize: '0.82rem', color: '#64748B' }}>
             {isLoginTab ? 'Sign in to access your wishlist and complete purchases' : 'Register to save your products, cart, and address details'}
           </p>
         </div>

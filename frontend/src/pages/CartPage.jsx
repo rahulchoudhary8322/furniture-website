@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Trash2, ShieldCheck, CreditCard, ChevronRight, FileText, Printer, CheckCircle } from 'lucide-react';
+import { ShoppingBag, Trash2, ShieldCheck, CreditCard, ChevronRight, Printer, CheckCircle } from 'lucide-react';
 
 export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRemoveFromCart, onClearCart }) {
   const [products, setProducts] = useState([]);
@@ -127,50 +127,50 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
   // STEP 1: RENDER CART ITEMS LIST
   if (checkoutStep === 'cart') {
     return (
-      <div className="container section-padding" style={{ animation: 'fadeIn 0.4s ease', minHeight: '60vh' }}>
-        <h1 style={{ fontSize: '2rem', fontFamily: "'Playfair Display', serif", marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <ShoppingCart size={28} /> Your Shopping Cart
+      <div className="container section-padding" style={{ animation: 'fadeIn 0.4s ease', minHeight: '60vh', padding: '40px 20px' }}>
+        <h1 style={{ fontSize: '2rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', marginBottom: '30px', display: 'flex', alignItems: 'center', gap: '12px', color: '#0F172A' }}>
+          <ShoppingBag size={28} /> Your Shopping Cart
         </h1>
 
         {products.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)' }}>
-            <h3>Your cart is empty.</h3>
-            <p style={{ margin: '15px 0', fontSize: '0.9rem', color: 'var(--text-muted)' }}>Explore our catalog to find premium furniture and electronics!</p>
+          <div style={{ textAlign: 'center', padding: '60px 20px', border: '1px solid #E2E8F0', borderRadius: '24px', backgroundColor: '#FFFFFF' }}>
+            <h3 style={{ fontWeight: '700' }}>Your cart is empty.</h3>
+            <p style={{ margin: '15px 0', fontSize: '0.9rem', color: '#64748B' }}>Explore our catalog to find premium furniture and electronics!</p>
             <Link to="/shop" className="btn btn-primary">Continue Shopping</Link>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: '1.8fr 1fr', gap: '40px' }} className="grid-2">
             
             {/* Products List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {products.map(p => {
                 const activePrice = p.sale_price ? parseFloat(p.sale_price) : parseFloat(p.price);
-                const imageUrl = p.primary_image 
-                  ? (p.primary_image.startsWith('/') ? `${window.API_URL}${p.primary_image}` : p.primary_image)
-                  : 'https://placehold.co/100x100?text=Product';
+                 const imageUrl = p.primary_image 
+                   ? (p.primary_image.startsWith('/') ? `${window.API_URL}${p.primary_image}` : p.primary_image)
+                   : 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=150&q=80';
 
                 return (
-                  <div key={p.id} style={{ display: 'flex', gap: '20px', padding: '16px', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', backgroundColor: '#FFF' }} className="cart-item-row">
-                    <img src={imageUrl} alt="" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
+                  <div key={p.id} style={{ display: 'flex', gap: '20px', padding: '16px', border: '1px solid #F1F5F9', borderRadius: '16px', backgroundColor: '#FFF', boxShadow: '0 4px 12px rgba(15,23,42,0.01)' }} className="cart-item-row">
+                    <img src={imageUrl} alt="" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '12px' }} />
                     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      <Link to={`/product/${p.slug}`} style={{ fontWeight: '600', color: 'var(--primary)' }}>{p.name}</Link>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Price: ₹{activePrice.toLocaleString('en-IN')}</span>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: 'auto' }}>
+                      <Link to={`/product/${p.slug}`} style={{ fontWeight: '700', color: '#0F172A', fontSize: '0.9rem' }}>{p.name}</Link>
+                      <span style={{ fontSize: '0.8rem', color: '#64748B' }}>Price: ₹{activePrice.toLocaleString('en-IN')}/-</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginTop: 'auto' }}>
                         
                         {/* Quantity Counter */}
-                        <div style={{ display: 'flex', border: '1px solid var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
-                          <button onClick={() => onUpdateQuantity(p.id, p.quantity - 1)} style={{ padding: '4px 10px', backgroundColor: '#F0F2F1' }}>-</button>
-                          <span style={{ padding: '4px 12px', fontSize: '0.85rem' }}>{p.quantity}</span>
-                          <button onClick={() => onUpdateQuantity(p.id, p.quantity + 1)} style={{ padding: '4px 10px', backgroundColor: '#F0F2F1' }}>+</button>
+                        <div style={{ display: 'flex', border: '1px solid #E2E8F0', borderRadius: '9999px', overflow: 'hidden' }}>
+                          <button onClick={() => onUpdateQuantity(p.id, p.quantity - 1)} style={{ padding: '4px 12px', backgroundColor: '#F8FAFC', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>-</button>
+                          <span style={{ padding: '4px 10px', fontSize: '0.8rem', minWidth: '20px', textAlign: 'center', alignSelf: 'center', fontWeight: '600' }}>{p.quantity}</span>
+                          <button onClick={() => onUpdateQuantity(p.id, p.quantity + 1)} style={{ padding: '4px 12px', backgroundColor: '#F8FAFC', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}>+</button>
                         </div>
 
-                        <button onClick={() => onRemoveFromCart(p.id)} style={{ color: '#C84B31', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.8rem', fontWeight: '500' }}>
-                          <Trash2 size={14} /> Remove
+                        <button onClick={() => onRemoveFromCart(p.id)} style={{ color: '#E11D48', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', fontWeight: '700', border: 'none', cursor: 'pointer' }}>
+                          <Trash2 size={13} /> Remove
                         </button>
                       </div>
                     </div>
-                    <div style={{ fontWeight: '700', color: 'var(--primary)', alignSelf: 'center' }}>
-                      ₹{(activePrice * p.quantity).toLocaleString('en-IN')}
+                    <div style={{ fontWeight: '800', color: '#0F172A', alignSelf: 'center', fontSize: '0.95rem' }}>
+                      ₹{(activePrice * p.quantity).toLocaleString('en-IN')}/-
                     </div>
                   </div>
                 );
@@ -178,28 +178,28 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
             </div>
 
             {/* Cart Summary */}
-            <div className="glass-panel" style={{ padding: '35px', height: 'fit-content' }}>
-              <h3 style={{ fontSize: '1.25rem', marginBottom: '20px', borderBottom: '1px solid var(--border)', paddingBottom: '10px' }}>Order Summary</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.9rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ padding: '30px', backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1px solid #E2E8F0', height: 'fit-content' }}>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: '800', marginBottom: '20px', borderBottom: '1px solid #F1F5F9', paddingBottom: '12px', color: '#0F172A' }}>Order Summary</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', fontSize: '0.9rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B' }}>
                   <span>Subtotal:</span>
-                  <span>₹{subtotal.toLocaleString('en-IN')}</span>
+                  <span style={{ fontWeight: '600', color: '#0F172A' }}>₹{subtotal.toLocaleString('en-IN')}/-</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B' }}>
                   <span>GST (18%):</span>
-                  <span>₹{gst.toLocaleString('en-IN')}</span>
+                  <span style={{ fontWeight: '600', color: '#0F172A' }}>₹{gst.toLocaleString('en-IN')}/-</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#2E7D32', fontWeight: '500' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', color: '#059669', fontWeight: '600' }}>
                   <span>Delivery Charges:</span>
                   <span>FREE</span>
                 </div>
-                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', fontSize: '1.15rem', fontWeight: '700', color: 'var(--primary)' }}>
+                <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', fontSize: '1.15rem', fontWeight: '800', color: '#0F172A' }}>
                   <span>Total Amount:</span>
-                  <span>₹{total.toLocaleString('en-IN')}</span>
+                  <span style={{ color: '#E11D48' }}>₹{total.toLocaleString('en-IN')}/-</span>
                 </div>
               </div>
 
-              <button onClick={handleProceedToCheckout} className="btn btn-primary" style={{ width: '100%', marginTop: '25px', padding: '14px', borderRadius: '8px' }}>
+              <button onClick={handleProceedToCheckout} className="btn btn-primary" style={{ width: '100%', marginTop: '25px', padding: '14px', borderRadius: '9999px', justifyContent: 'center' }}>
                 Proceed to Checkout <ChevronRight size={16} />
               </button>
             </div>
@@ -213,14 +213,14 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
   // STEP 2: RENDER CHECKOUT BILLING FORM
   if (checkoutStep === 'checkout') {
     return (
-      <div className="container section-padding" style={{ animation: 'fadeIn 0.4s ease', maxWidth: '600px', minHeight: '60vh' }}>
-        <div className="glass-panel" style={{ padding: '40px' }}>
-          <h2 style={{ fontSize: '1.8rem', fontFamily: "'Playfair Display', serif", marginBottom: '10px', textAlign: 'center' }}>Billing & Delivery Info</h2>
-          <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', textAlign: 'center', marginBottom: '30px' }}>Please complete your shipping address to generate order receipt</p>
+      <div className="container section-padding" style={{ animation: 'fadeIn 0.4s ease', maxWidth: '580px', minHeight: '60vh', padding: '40px 20px' }}>
+        <div style={{ padding: '40px 30px', backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1px solid #E2E8F0' }}>
+          <h2 style={{ fontSize: '1.8rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', marginBottom: '8px', textAlign: 'center', color: '#0F172A' }}>Billing & Delivery Info</h2>
+          <p style={{ fontSize: '0.85rem', color: '#64748B', textAlign: 'center', marginBottom: '30px' }}>Please complete your shipping address to generate order receipt</p>
           
           <form onSubmit={handleCheckoutSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {errorMessage && (
-              <div style={{ display: 'flex', gap: '8px', padding: '12px', backgroundColor: '#FCE8E6', color: '#C84B31', borderRadius: '8px', fontSize: '0.85rem', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '8px', padding: '12px 16px', backgroundColor: '#FEE2E2', color: '#DC2626', borderRadius: '12px', fontSize: '0.85rem', alignItems: 'center' }}>
                 <ShieldCheck size={16} />
                 <span>{errorMessage}</span>
               </div>
@@ -257,7 +257,7 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
                 id="chk-addr" 
                 rows="3" 
                 required 
-                placeholder="House name/flat no., street, city, pin code (Rajasthan or other states)" 
+                placeholder="House name/flat no., street, city, pin code" 
                 value={shippingAddress}
                 onChange={(e) => setShippingAddress(e.target.value)}
                 className="form-control"
@@ -265,22 +265,22 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '6px', color: 'var(--primary)' }}>Payment Mode</label>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px', color: '#0F172A' }}>Payment Mode</label>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', cursor: 'pointer' }}>
-                  <input type="radio" name="pay" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} />
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', cursor: 'pointer', color: '#334155' }}>
+                  <input type="radio" name="pay" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} style={{ accentColor: '#E11D48' }} />
                   <span>Cash on Delivery (COD) / Pay upon assembly</span>
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.9rem', cursor: 'pointer' }}>
-                  <input type="radio" name="pay" checked={paymentMethod === 'upi'} onChange={() => setPaymentMethod('upi')} />
+                <label style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '0.88rem', cursor: 'pointer', color: '#334155' }}>
+                  <input type="radio" name="pay" checked={paymentMethod === 'upi'} onChange={() => setPaymentMethod('upi')} style={{ accentColor: '#E11D48' }} />
                   <span>Scan UPI upon arrival / Mobile transfer</span>
                 </label>
               </div>
             </div>
 
-            <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <button type="button" onClick={() => setCheckoutStep('cart')} style={{ fontSize: '0.88rem', fontWeight: '600', color: 'var(--text-muted)' }}>Back to Cart</button>
-              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Placing Order...' : 'Confirm Order & Place'}</button>
+            <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <button type="button" onClick={() => setCheckoutStep('cart')} style={{ fontSize: '0.88rem', fontWeight: '600', color: '#64748B', border: 'none', background: 'none', cursor: 'pointer' }}>Back to Cart</button>
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>{isSubmitting ? 'Placing Order...' : 'Confirm & Place Order'}</button>
             </div>
           </form>
         </div>
@@ -291,88 +291,88 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
   // STEP 3: RENDER PRINTABLE INVOICE RECEIPT
   if (checkoutStep === 'receipt') {
     return (
-      <div className="container section-padding" style={{ animation: 'fadeIn 0.5s ease', maxWidth: '750px', minHeight: '80vh' }}>
+      <div className="container section-padding" style={{ animation: 'fadeIn 0.5s ease', maxWidth: '750px', minHeight: '80vh', padding: '40px 20px' }}>
         
         {/* Success Banner */}
-        <div style={{ textAlign: 'center', color: '#2E7D32', marginBottom: '40px' }} className="no-print">
+        <div style={{ textAlign: 'center', color: '#059669', marginBottom: '40px' }} className="no-print">
           <CheckCircle size={56} style={{ margin: '0 auto 10px auto' }} />
-          <h2>Order Placed Successfully!</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '6px' }}>Your simulated order has been registered. You can print the commercial receipt below.</p>
+          <h2 style={{ fontWeight: '800' }}>Order Placed Successfully!</h2>
+          <p style={{ color: '#64748B', fontSize: '0.9rem', marginTop: '6px' }}>Your simulated order has been registered. You can print the commercial receipt below.</p>
         </div>
 
         {/* Invoice Container */}
-        <div style={{ border: '2px solid var(--primary)', borderRadius: 'var(--radius-md)', padding: '40px', backgroundColor: '#FFFFFF', boxShadow: 'var(--shadow)' }} id="printable-invoice">
+        <div style={{ border: '1px solid #E2E8F0', borderRadius: '24px', padding: '40px', backgroundColor: '#FFFFFF', boxShadow: '0 4px 20px rgba(0,0,0,0.02)' }} id="printable-invoice">
           
           {/* Header */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid var(--primary)', paddingBottom: '20px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #0F172A', paddingBottom: '20px', marginBottom: '24px' }}>
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontFamily: "'Playfair Display', serif" }}>SDC CANTEEN</h1>
-              <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 'bold' }}>Furniture & Electronics Canteen</p>
-              <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px', maxWidth: '300px' }}>
-                Near Balaji Goshala, Salasar Ke Samne, Sujangarh Road, Salasar, Churu, Rajasthan – 331506
+              <h1 style={{ fontSize: '1.8rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A' }}>Anjana</h1>
+              <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#E11D48', fontWeight: '700', letterSpacing: '0.5px' }}>Premium E-Commerce Store</p>
+              <p style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '4px', maxWidth: '300px' }}>
+                Near Balaji Goshala, Salasar, Rajasthan – 331506
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <h2 style={{ fontSize: '1.4rem', color: 'var(--primary)' }}>TAX INVOICE</h2>
+              <h2 style={{ fontSize: '1.4rem', color: '#0F172A', fontWeight: '800' }}>TAX INVOICE</h2>
               <p style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>Receipt ID: {orderId}</p>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Date: {new Date().toLocaleDateString()}</p>
-              <p style={{ fontSize: '0.75rem', color: '#2E7D32', fontWeight: '600', marginTop: '6px' }}>Status: PAID / COD VERIFIED</p>
+              <p style={{ fontSize: '0.8rem', color: '#64748B' }}>Date: {new Date().toLocaleDateString()}</p>
+              <p style={{ fontSize: '0.75rem', color: '#059669', fontWeight: '700', marginTop: '6px' }}>Status: PAID / COD VERIFIED</p>
             </div>
           </div>
 
           {/* Customer info */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px', fontSize: '0.82rem' }}>
             <div>
-              <h4 style={{ color: 'var(--primary)', marginBottom: '6px' }}>Billed To:</h4>
-              <p style={{ fontWeight: 'bold' }}>{fullName}</p>
+              <h4 style={{ color: '#0F172A', fontWeight: '700', marginBottom: '6px' }}>Billed To:</h4>
+              <p style={{ fontWeight: 'bold', color: '#0F172A' }}>{fullName}</p>
               <p>Phone: {phoneNumber}</p>
               <p style={{ whiteSpace: 'pre-line' }}>Address: {shippingAddress}</p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <h4 style={{ color: 'var(--primary)', marginBottom: '6px' }}>Supplier Information:</h4>
-              <p style={{ fontWeight: 'bold' }}>SDC Furniture & Electronic Canteen</p>
+              <h4 style={{ color: '#0F172A', fontWeight: '700', marginBottom: '6px' }}>Supplier Information:</h4>
+              <p style={{ fontWeight: 'bold', color: '#0F172A' }}>Anjana E-Commerce</p>
               <p>GSTIN: 08AAAAA1111A1Z0 (Mock)</p>
-              <p>WhatsApp Helpdesk: 9982827751</p>
+              <p>Support Helpdesk: 9982827751</p>
             </div>
           </div>
 
           {/* Bill breakdown */}
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
-            <h4 style={{ color: 'var(--primary)', marginBottom: '10px' }}>Bill Details</h4>
+          <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '20px' }}>
+            <h4 style={{ color: '#0F172A', fontWeight: '700', marginBottom: '10px' }}>Bill Details</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.85rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B' }}>
                 <span>Simulated Order Subtotal</span>
-                <span>₹{(orderSubtotal / 1.18).toFixed(2)}</span>
+                <span>₹{(orderSubtotal / 1.18).toFixed(2)}/-</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B' }}>
                 <span>Simulated CGST + SGST (18%)</span>
-                <span>₹{(orderSubtotal - (orderSubtotal / 1.18)).toFixed(2)}</span>
+                <span>₹{(orderSubtotal - (orderSubtotal / 1.18)).toFixed(2)}/-</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#2E7D32' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', color: '#059669', fontWeight: '600' }}>
                 <span>Shipping & Assembly</span>
                 <span>FREE</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1rem', fontWeight: 'bold', borderTop: '2px solid var(--primary)', paddingTop: '10px', color: 'var(--primary)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1rem', fontWeight: '800', borderTop: '2px solid #0F172A', paddingTop: '10px', color: '#0F172A' }}>
                 <span>Final Billing Amount</span>
-                <span>₹{orderSubtotal.toLocaleString('en-IN')}</span>
+                <span style={{ color: '#E11D48' }}>₹{orderSubtotal.toLocaleString('en-IN')}/-</span>
               </div>
             </div>
           </div>
 
           {/* Footer note */}
-          <div style={{ borderTop: '1px solid var(--border)', marginTop: '30px', paddingTop: '15px', textAlign: 'center', fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-            <p>Thank you for shopping at **SDC Furniture & Electronic Canteen**!</p>
-            <p style={{ fontStyle: 'italic', marginTop: '2px' }}>This is a simulated sales receipt. For actual shipments, SDC team will call you on your provided phone number.</p>
+          <div style={{ borderTop: '1px solid #F1F5F9', marginTop: '30px', paddingTop: '15px', textAlign: 'center', fontSize: '0.78rem', color: '#94A3B8' }}>
+            <p>Thank you for shopping at **Anjana**!</p>
+            <p style={{ fontStyle: 'italic', marginTop: '2px' }}>This is a simulated sales receipt. For actual shipments, our team will call you on your provided phone number.</p>
           </div>
 
         </div>
 
         {/* Printable actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '30px' }} className="no-print">
-          <Link to="/" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Link to="/" className="btn btn-outline" style={{ display: 'flex', alignItems: 'center', gap: '8px', borderRadius: '9999px' }}>
             Back to Home
           </Link>
-          <button onClick={handlePrint} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button onClick={handlePrint} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '8px', borderRadius: '9999px' }}>
             <Printer size={18} /> Print Receipt / Save PDF
           </button>
         </div>

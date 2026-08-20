@@ -52,21 +52,21 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
 
   // Set SEO tags dynamically based on active search or category filters
   useEffect(() => {
-    let title = 'Shop Furniture & Electronics - SDC Canteen';
-    let desc = 'Browse premium furniture and home appliances catalog at SDC Furniture & Electronic Canteen. Quality products since 1998 in Rajasthan.';
-    let keys = 'SDC Canteen products, buy furniture online, buy electronics Salasar';
+    let title = 'Shop Premium Furniture & Electronics - Anjana';
+    let desc = 'Browse premium custom furniture and home appliances catalog at Anjana. Quality products since 1998.';
+    let keys = 'Anjana products, buy furniture online, buy electronics';
 
     if (currentCategorySlug) {
       // Find category name
       const cat = categories.find(c => c.slug === currentCategorySlug);
       const catName = cat ? cat.name : currentCategorySlug.charAt(0).toUpperCase() + currentCategorySlug.slice(1);
-      title = `${catName} Collection - SDC Furniture & Electronic Canteen`;
-      desc = `Explore SDC Furniture & Electronic Canteen's premium ${catName} range. Handcrafted quality, custom sizes, and fast delivery in Rajasthan.`;
-      keys = `${catName}, buy ${catName} online, SDC Canteen ${catName}, furniture Rajasthan`;
+      title = `${catName} Collection - Anjana Premium Store`;
+      desc = `Explore Anjana's premium ${catName} range. Handcrafted quality, custom sizes, and fast delivery.`;
+      keys = `${catName}, buy ${catName} online, Anjana ${catName}, premium quality`;
     } else if (searchKeyword) {
-      title = `Search Results for "${searchKeyword}" - SDC Canteen`;
-      desc = `Browse products matching "${searchKeyword}" at SDC Furniture & Electronic Canteen. Shop premium appliances and home decor with GST billing.`;
-      keys = `search ${searchKeyword}, SDC canteen search, furniture ${searchKeyword}`;
+      title = `Search Results for "${searchKeyword}" - Anjana`;
+      desc = `Browse products matching "${searchKeyword}" at Anjana. Shop premium appliances and home decor with GST billing.`;
+      keys = `search ${searchKeyword}, Anjana search, premium ${searchKeyword}`;
     }
 
     document.title = title;
@@ -353,10 +353,10 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
   const isMainCategorySelected = currentCategory && currentCategory.parent_id === null && !searchKeyword;
 
   return (
-    <div className="container section-padding plp-layout" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '40px', minHeight: '80vh' }}>
+    <div className="container section-padding plp-layout" style={{ display: 'grid', gridTemplateColumns: '260px 1fr', gap: '40px', minHeight: '80vh', padding: '40px 20px' }}>
       
       {/* 1. Left Sidebar Filters (Desktop Only) */}
-      <aside className="desktop-filters" style={{ borderRight: '1px solid var(--border)', paddingRight: '24px' }}>
+      <aside className="desktop-filters" style={{ borderRight: '1px solid #E2E8F0', paddingRight: '24px' }}>
         {renderFilters()}
       </aside>
 
@@ -366,11 +366,11 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
         {/* Top bar controls */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '15px' }}>
           <div>
-            <h1 style={{ fontSize: '1.8rem', fontFamily: "'Playfair Display', serif", fontWeight: '700' }}>
+            <h1 style={{ fontSize: '1.8rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A' }}>
               {getPageTitle()}
             </h1>
             {!isMainCategorySelected && (
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+              <span style={{ fontSize: '0.85rem', color: '#64748B' }}>
                 Showing {products.length} products found
               </span>
             )}
@@ -425,7 +425,7 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
               const isActive = currentCategorySlug === sub.slug;
               const subImg = sub.image_url 
                 ? (sub.image_url.startsWith('/') ? `${window.API_URL}${sub.image_url}` : sub.image_url)
-                : 'https://placehold.co/100x100?text=Subcat';
+                : 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=150&q=80';
               return (
                 <button
                   key={sub.id}
@@ -481,14 +481,14 @@ export default function CategoryPage({ cart, wishlist, onAddToCart, onToggleWish
         {/* Dynamic products list grid OR subcategories cards grid */}
         {isMainCategorySelected ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', marginBottom: '10px' }}>
-              Select a subcategory below to explore SDC's premium inventory:
+            <p style={{ color: '#64748B', fontSize: '0.92rem', marginBottom: '10px' }}>
+              Select a subcategory below to explore Anjana's premium inventory:
             </p>
             <div className="grid-3" style={{ gap: '20px' }}>
               {subcategories.map(sub => {
                 const subImg = sub.image_url 
                   ? (sub.image_url.startsWith('/') ? `${window.API_URL}${sub.image_url}` : sub.image_url)
-                  : 'https://placehold.co/300x300?text=Subcategory';
+                  : 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=400&q=80';
                 return (
                   <div 
                     key={sub.id} 

@@ -83,6 +83,14 @@ exports.createOrder = async (req, res) => {
       );
     }
 
+    // Update user profile address in users table to persist for future checkouts
+    if (userId) {
+      await connection.query(
+        'UPDATE users SET full_name = ?, phone = ?, address = ? WHERE id = ?',
+        [full_name, phone, address, userId]
+      );
+    }
+
     await connection.commit();
     connection.release();
 

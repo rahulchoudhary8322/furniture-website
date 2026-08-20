@@ -7,7 +7,7 @@ export default function AiAssistant() {
   const [messages, setMessages] = useState([
     {
       sender: 'ai',
-      text: 'Namaste! SDC Furniture & Electronic Canteen welcomes you. We have been bringing quality home products since 1998. \n\nHow can I help you today? You can ask me to recommend recliners, compare products, check custom manufacturing services, or show our contact details!'
+      text: 'Namaste! Anjana Premium Store welcomes you. We have been bringing quality products since 1998. \n\nHow can I help you today? You can ask me to recommend products, compare items, check custom manufacturing services, or show our contact details!'
     }
   ]);
   const [input, setInput] = useState('');
@@ -95,7 +95,7 @@ export default function AiAssistant() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Sparkles size={18} style={{ color: 'var(--accent)' }} />
               <div>
-                <h4 style={{ color: '#FFFFFF', fontSize: '0.95rem', margin: 0, fontWeight: '600' }}>SDC Shopping Assistant</h4>
+                <h4 style={{ color: '#FFFFFF', fontSize: '0.95rem', margin: 0, fontWeight: '600' }}>Anjana Shopping Assistant</h4>
                 <span style={{ fontSize: '0.7rem', opacity: 0.8 }}>Rule-based AI Helper</span>
               </div>
             </div>
@@ -138,7 +138,7 @@ export default function AiAssistant() {
                         className="ai-product-card"
                       >
                         <img 
-                          src={prod.primary_image ? `${window.API_URL}${prod.primary_image}` : 'https://placehold.co/80x80?text=Product'} 
+                          src={prod.primary_image ? `${window.API_URL}${prod.primary_image}` : 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=150&q=80'} 
                           alt={prod.name} 
                           style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} 
                         />
@@ -181,8 +181,8 @@ export default function AiAssistant() {
                         </tr>
                         <tr style={{ borderBottom: '1px solid #F0F2F1' }}>
                           <td style={{ padding: '6px', fontWeight: '500' }}>Brand</td>
-                          <td style={{ padding: '6px' }}>{msg.comparison.product1.brand_name || 'SDC'}</td>
-                          <td style={{ padding: '6px' }}>{msg.comparison.product2.brand_name || 'SDC'}</td>
+                          <td style={{ padding: '6px' }}>{msg.comparison.product1.brand_name || 'Anjana'}</td>
+                          <td style={{ padding: '6px' }}>{msg.comparison.product2.brand_name || 'Anjana'}</td>
                         </tr>
                         <tr style={{ borderBottom: '1px solid #F0F2F1' }}>
                           <td style={{ padding: '6px', fontWeight: '500' }}>Material</td>

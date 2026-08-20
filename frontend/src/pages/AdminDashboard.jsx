@@ -896,7 +896,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
                 <tbody>
                   {filteredProducts.map(p => {
                     const activePrice = p.sale_price ? parseFloat(p.sale_price) : parseFloat(p.price);
-                    const imgUrl = p.primary_image ? `${window.API_URL}${p.primary_image}` : 'https://placehold.co/50x50?text=Prod';
+                    const imgUrl = p.primary_image ? `${window.API_URL}${p.primary_image}` : 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=80&q=80';
                     return (
                       <tr key={p.id} style={{ borderBottom: '1px solid var(--border)' }}>
                         <td style={{ padding: '12px' }}>

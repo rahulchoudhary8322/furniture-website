@@ -18,44 +18,44 @@ import AdminDashboard from './pages/AdminDashboard';
 // Mock SEO Details for static fallback
 const fallbackSEO = {
   home: {
-    title: 'SDC Furniture & Electronic Canteen - Premium Furniture & Electronics in Rajasthan',
-    description: 'Trusted since 1998, SDC Furniture & Electronic Canteen provides premium quality home furniture, sofa sets, LED TVs, air conditioners, mobile phones, toys and home decor products in Salasar, Rajasthan.',
-    keywords: 'SDC Canteen, SDC Furniture Salasar, SDC Electronics, Best furniture shop in Salasar, premium recliners, sofa sets Salasar'
+    title: 'Anjana Premium Store - Custom Furniture & Smart Electronics',
+    description: 'Trusted since 1998, Anjana provides premium quality home furniture, sofa sets, LED TVs, air conditioners, mobile phones, toys and home decor products.',
+    keywords: 'Anjana, Anjana Furniture, Anjana Electronics, premium recliners, sofa sets'
   },
   about: {
-    title: 'About Us - SDC Furniture & Electronic Canteen',
-    description: 'Learn about our journey since 1998 in delivering high-quality products including custom manufactured furniture, premium electronics, and appliances across Rajasthan.',
-    keywords: 'SDC Canteen history, furniture manufacturer Rajasthan, trusted electronic shop since 1998'
+    title: 'About Us - Anjana Premium Store',
+    description: 'Learn about our journey since 1998 in delivering high-quality products including custom manufactured furniture, premium electronics, and appliances.',
+    keywords: 'Anjana history, furniture manufacturer, trusted electronic shop since 1998'
   },
   contact: {
-    title: 'Contact Us - SDC Furniture & Electronic Canteen',
-    description: 'Get in touch with SDC Furniture & Electronic Canteen. Located near Balaji Goshala, Salasar. Call +91 9982827751 for details and bulk order requests.',
-    keywords: 'SDC contact number, Salasar furniture showroom address, SDC WhatsApp support'
+    title: 'Contact Us - Anjana Premium Store',
+    description: 'Get in touch with Anjana. Call +91 9982827751 for details and bulk order requests.',
+    keywords: 'Anjana contact number, showroom address, WhatsApp support'
   },
   services: {
-    title: 'Our Services - SDC Furniture & Electronic Canteen',
+    title: 'Our Services - Anjana Premium Store',
     description: 'Explore our wide range of services including custom furniture manufacturing, electronics supply, installation and repair support, and fast delivery.',
-    keywords: 'furniture customization Rajasthan, electronics installation support, SDC appliance repair'
+    keywords: 'furniture customization, electronics installation support, appliance repair'
   },
   cart: {
-    title: 'My Shopping Cart - SDC Furniture & Electronic Canteen',
-    description: 'Review your selected furniture and electronics items. Secure checkout, multiple payment options, and premium delivery across Rajasthan.',
-    keywords: 'shopping cart, SDC checkout, buy furniture Salasar'
+    title: 'My Shopping Cart - Anjana Premium Store',
+    description: 'Review your selected furniture and electronics items. Secure checkout, multiple payment options, and premium delivery.',
+    keywords: 'shopping cart, checkout, buy furniture'
   },
   wishlist: {
-    title: 'My Wishlist - SDC Furniture & Electronic Canteen',
-    description: 'Your saved custom furniture and premium electronic items at SDC Canteen. Log in to sync and save your favorites across devices.',
-    keywords: 'wishlist items, saved furniture, favorite electronics SDC'
+    title: 'My Wishlist - Anjana Premium Store',
+    description: 'Your saved custom furniture and premium electronic items at Anjana. Log in to sync and save your favorites across devices.',
+    keywords: 'wishlist items, saved furniture, favorite electronics'
   },
   login: {
-    title: 'Customer Login & Registration - SDC Canteen',
-    description: 'Sign in or register for a customer account at SDC Furniture & Electronic Canteen. Save wishlists, view orders, and manage shipping addresses.',
-    keywords: 'customer login, register account, SDC sign in'
+    title: 'Customer Login & Registration - Anjana',
+    description: 'Sign in or register for a customer account at Anjana. Save wishlists, view orders, and manage shipping addresses.',
+    keywords: 'customer login, register account, sign in'
   },
   profile: {
-    title: 'My Account Profile - SDC Furniture & Electronic Canteen',
-    description: 'Manage your SDC Canteen customer profile, update contact details, set default shipping address, city, state, pincode, and view orders.',
-    keywords: 'manage profile, SDC customer profile, user account details'
+    title: 'My Account Profile - Anjana Premium Store',
+    description: 'Manage your Anjana customer profile, update contact details, set default shipping address, city, state, pincode, and view orders.',
+    keywords: 'manage profile, customer profile, user account details'
   }
 };
 
@@ -73,7 +73,19 @@ function SeoManager() {
     else if (location.pathname === '/login') pageName = 'login';
     else if (location.pathname === '/profile') pageName = 'profile';
     else if (location.pathname.startsWith('/product/')) pageName = 'product';
-    else if (location.pathname.startsWith('/shop')) pageName = 'shop';
+    else if (location.pathname === '/shop') pageName = 'shop';
+
+    const meta = fallbackSEO[pageName];
+    if (meta) {
+      // Special handling for catalog and details pages
+      if (pageName === 'product') {
+        document.title = 'Product Details - Anjana Premium Store';
+        return;
+      } else if (pageName === 'shop') {
+        document.title = 'Shop Products Catalog - Anjana Premium Store';
+        return;
+      }
+    }
 
     // 1. Fetch current SEO tags from backend
     fetch(`${window.API_URL}/api/admin/seo`)
@@ -92,10 +104,10 @@ function SeoManager() {
         // Special handling for catalog and details pages
         if (pageName === 'product') {
           // Handled inside ProductPage component or with a general placeholder
-          document.title = 'Product Details - SDC Furniture & Electronic Canteen';
+          document.title = 'Product Details - Anjana Premium Store';
           return;
         } else if (pageName === 'shop') {
-          document.title = 'Shop Products Catalog - SDC Furniture & Electronic Canteen';
+          document.title = 'Shop Products Catalog - Anjana Premium Store';
           return;
         }
 

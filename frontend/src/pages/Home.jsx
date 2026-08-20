@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Award, ShieldCheck, Truck, ShieldAlert, BadgePercent, Wrench, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import { Award, ShieldCheck, Truck, ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 
 export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) {
@@ -42,23 +42,22 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
         } else {
           // Fallback static banners
           setBanners([
-            { id: 1, title: 'Premium Custom Furniture', subtitle: 'Manufacturer of luxury recliners, sofas and beds since 1998', image_url: 'https://placehold.co/1200x500/0a2a1b/ffffff?text=Premium+Custom+Furniture', link: '/shop?category=furniture' },
-            { id: 2, title: 'Latest Smart Electronics & Appliances', subtitle: 'Genuine products backed by GST billing & warranty support', image_url: 'https://placehold.co/1200x500/163c29/ffffff?text=Smart+Electronics+&+Appliances', link: '/shop?category=electronics' }
+            { id: 1, title: 'Premium Custom Furniture', subtitle: 'Manufacturer of luxury recliners, sofas and beds since 1998', image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80', link: '/shop?category=furniture' },
+            { id: 2, title: 'Latest Smart Electronics & Appliances', subtitle: 'Genuine products backed by GST billing & warranty support', image_url: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=1200&q=80', link: '/shop?category=electronics' }
           ]);
         }
       })
       .catch(() => {
         setBanners([
-          { id: 1, title: 'Premium Custom Furniture', subtitle: 'Manufacturer of luxury recliners, sofas and beds since 1998', image_url: 'https://placehold.co/1200x500/0a2a1b/ffffff?text=Premium+Custom+Furniture', link: '/shop?category=furniture' }
+          { id: 1, title: 'Premium Custom Furniture', subtitle: 'Manufacturer of luxury recliners, sofas and beds since 1998', image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80', link: '/shop?category=furniture' }
         ]);
       });
 
-    // 2. Fetch Reviews from admin reviews endpoint (simulated helper or static fallback)
+    // 2. Fetch Reviews
     fetch(`${window.API_URL}/api/products`)
       .then(res => res.json())
       .then(res => {
         if (res.success) {
-          // Collect reviews or set static reviews using SDC info
           setReviews([
             { id: 1, customer_name: 'Rahul Sharma (Salasar)', rating: 5, comment: 'Bhaiya, SDC se humne sofa aur LED TV liya tha. Dono hi gazab quality ke hain. GST billing support ke sath warranty service bhi badiya mili.' },
             { id: 2, customer_name: 'Priya Vyas (Sujangarh)', rating: 5, comment: 'Custom fabric recliner is extremely comfortable. The wooden frame is solid and polishing is very neat. Best pricing in Churu district!' },
@@ -68,13 +67,10 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
       });
   }, []);
 
-  // 3. Fetch products based on active tab
+  // 3. Fetch products
   useEffect(() => {
     let url = `${window.API_URL}/api/products`;
-    if (activeTab === 'featured') url += '?featured=true';
-    if (activeTab === 'bestseller') url += '?bestseller=true';
-    if (activeTab === 'newarrival') url += '?newarrival=true';
-
+    // We want to fetch all products for the most loved slider
     fetch(url)
       .then(res => res.json())
       .then(res => {
@@ -82,8 +78,8 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
           setProducts(res.data);
         }
       })
-      .catch(err => console.error('Error fetching tab products:', err));
-  }, [activeTab]);
+      .catch(err => console.error('Error fetching products:', err));
+  }, []);
 
   const nextBanner = () => {
     setCurrentBanner((prev) => (prev + 1) % banners.length);
@@ -112,193 +108,364 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
   };
 
   return (
-    <div style={{ animation: 'fadeIn 0.5s ease' }}>
+    <div style={{ animation: 'fadeIn 0.5s ease', backgroundColor: '#FFFFFF' }}>
       
-      {/* 1. Hero Banner Slider */}
-      {banners.length > 0 && (
-        <section style={{ position: 'relative', height: '520px', backgroundColor: 'var(--primary)', overflow: 'hidden' }} className="hero-section">
-          {banners.map((slide, idx) => {
-            const imageUrl = slide.image_url.startsWith('/') ? `${window.API_URL}${slide.image_url}` : slide.image_url;
-            return (
-              <div 
-                key={slide.id} 
-                style={{
-                  position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-                  opacity: idx === currentBanner ? 1 : 0, transition: 'opacity 0.8s ease',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: idx === currentBanner ? 1 : 0
-                }}
-              >
-                {/* Background Banner Image */}
-                <div style={{
-                  position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                  backgroundImage: `linear-gradient(to right, rgba(10, 42, 27, 0.9) 35%, rgba(10, 42, 27, 0.3) 100%), url(${imageUrl})`,
-                  backgroundSize: 'cover', backgroundPosition: 'center'
-                }} />
-
-                {/* Banner Text overlay */}
-                <div className="container" style={{ position: 'relative', zIndex: 10, color: '#FFFFFF', padding: '0 24px' }}>
-                  <div style={{ maxWidth: '600px' }} className="hero-content">
-                    <span style={{ color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.85rem', fontWeight: '700', display: 'block', marginBottom: '12px' }}>
-                      SDC Furniture & Electronic Canteen
-                    </span>
-                    <h1 style={{ color: '#FFFFFF', fontSize: '3.2rem', fontFamily: "'Playfair Display', serif", lineHeight: '1.1', marginBottom: '20px' }}>
-                      {slide.title}
-                    </h1>
-                    <p style={{ fontSize: '1.1rem', opacity: 0.9, marginBottom: '30px', fontWeight: '300' }}>
-                      {slide.subtitle}
-                    </p>
-                    <Link to={slide.link || '/shop'} className="btn btn-accent">
-                      Explore Catalog
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* Slider Controls */}
-          {banners.length > 1 && (
-            <>
-              <button onClick={prevBanner} style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 20, color: '#FFFFFF', backgroundColor: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '50%' }}>
-                <ChevronLeft size={24} />
-              </button>
-              <button onClick={nextBanner} style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', zIndex: 20, color: '#FFFFFF', backgroundColor: 'rgba(0,0,0,0.3)', padding: '10px', borderRadius: '50%' }}>
-                <ChevronRight size={24} />
-              </button>
-            </>
-          )}
-        </section>
-      )}
-
-      {/* 2. Popular Categories Section (Round Category Cards) */}
-      <section className="section-padding" style={{ backgroundColor: '#FFFFFF' }}>
+      {/* 1. Category Bar Row (Below navbar) */}
+      <section style={{ backgroundColor: '#FAF4ED', padding: '24px 0', borderBottom: '1px solid #FFEBE4' }} className="categories-header-row">
         <div className="container">
-          <div className="section-title">
-            <h2>Shop by Category</h2>
-            <p>Explore our premium home collections and high-grade products</p>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '40px' }} className="popular-categories">
+          <div style={{ display: 'flex', gap: '30px', overflowX: 'auto', paddingBottom: '10px', justifyContent: 'space-between', scrollbarWidth: 'none' }} className="category-scroll-list">
             {[
               { id: 1, name: 'Furniture', slug: 'furniture', icon: '/uploads/cat-furniture.jpg', fallback: '🛋️' },
               { id: 2, name: 'Electronics', slug: 'electronics', icon: '/uploads/cat-electronics.jpg', fallback: '🔌' },
-              { id: 3, name: 'Home & Decor', slug: 'home-decor', icon: '/uploads/cat-decor.jpg', fallback: '🪔' },
-              { id: 4, name: 'Toys', slug: 'toys', icon: '/uploads/cat-toys.jpg', fallback: '🧸' },
-              { id: 5, name: 'Bicycle', slug: 'bicycle', icon: '/uploads/cat-bicycle.jpg', fallback: '🚲' }
-            ].map(cat => (
-              <Link 
-                to={`/shop?category=${cat.slug}`} 
-                key={cat.id} 
-                style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '15px' }}
-                className="category-circle-link"
-              >
-                <div style={{
-                  width: '120px', height: '120px', borderRadius: '50%', overflow: 'hidden',
-                  border: '3px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  backgroundColor: 'var(--bg)', boxShadow: 'var(--shadow)', transition: 'var(--transition)'
-                }} className="circle-image-holder">
-                  <img 
-                    src={cat.icon.startsWith('/') ? `${window.API_URL}${cat.icon}` : cat.icon} 
-                    alt={cat.name} 
-                    onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-                  />
-                  <span style={{ display: 'none', fontSize: '3rem' }}>{cat.fallback}</span>
-                </div>
-                <h4 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--primary)' }}>{cat.name}</h4>
-              </Link>
-            ))}
+              { id: 3, name: 'Mobiles', slug: 'mobile-phones', icon: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=150&q=80', fallback: '📱' },
+              { id: 4, name: 'Accessories', slug: 'electronics', icon: '/uploads/cat-earbuds.jpg', fallback: '🎧' },
+              { id: 5, name: 'Kidz Cars', slug: 'toys', icon: '/uploads/cat-toy-cars.jpg', fallback: '🚗' },
+              { id: 6, name: 'Home & Decor', slug: 'home-decor', icon: '/uploads/cat-decor.jpg', fallback: '🪔' },
+              { id: 7, name: 'Others', slug: '', icon: '', isOthers: true }
+            ].map(cat => {
+              if (cat.isOthers) {
+                return (
+                  <Link to="/shop" key="others" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', minWidth: '85px', textAlign: 'center' }}>
+                    <div style={{
+                      width: '74px', height: '74px', borderRadius: '50%', backgroundColor: '#FFFFFF',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '700',
+                      fontSize: '0.85rem', border: '1px solid #E2E8F0', color: '#0F172A',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.02)', transition: 'all 0.25s ease'
+                    }} className="category-circle-item">
+                      Others
+                    </div>
+                    <span style={{ fontSize: '0.78rem', fontWeight: '500', color: '#0F172A' }}>Others</span>
+                  </Link>
+                );
+              }
+              const imageUrl = cat.icon.startsWith('/') ? `${window.API_URL}${cat.icon}` : cat.icon;
+              return (
+                <Link to={`/shop?category=${cat.slug}`} key={cat.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', minWidth: '85px', textAlign: 'center' }}>
+                  <div style={{
+                    width: '74px', height: '74px', borderRadius: '50%', overflow: 'hidden',
+                    border: '1px solid #E2E8F0', backgroundColor: '#FFFFFF', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+                    transition: 'all 0.25s ease'
+                  }} className="category-circle-item">
+                    <img
+                      src={imageUrl}
+                      alt={cat.name}
+                      onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    />
+                    <span style={{ display: 'none', fontSize: '1.5rem' }}>{cat.fallback}</span>
+                  </div>
+                  <span style={{ fontSize: '0.78rem', fontWeight: '500', color: '#0F172A' }}>{cat.name}</span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* 3. Products Showcase with Dynamic Tabs */}
-      <section className="section-padding">
+      {/* 2. Hero Promotional Layout (Main banner + 4 side cards) */}
+      <section style={{ padding: '30px 0' }}>
         <div className="container">
-          <div className="section-title">
-            <h2>Trending Products</h2>
-            <p>Carefully selected and manufactured for durability and aesthetics</p>
-          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '20px' }} className="hero-grid-layout">
+            
+            {/* Left: Main Slider */}
+            <div style={{ 
+              backgroundColor: '#FFEBE7', // Peach background
+              borderRadius: '24px',
+              padding: '40px',
+              position: 'relative',
+              height: '420px',
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.01)'
+            }} className="hero-main-card">
+              {banners.map((slide, idx) => {
+                const imageUrl = slide.image_url.startsWith('/') ? `${window.API_URL}${slide.image_url}` : slide.image_url;
+                return (
+                  <div 
+                    key={slide.id} 
+                    style={{
+                      position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                      opacity: idx === currentBanner ? 1 : 0, transition: 'opacity 0.6s ease',
+                      display: 'flex', alignItems: 'center', padding: '40px', zIndex: idx === currentBanner ? 1 : 0,
+                      boxSizing: 'border-box'
+                    }}
+                  >
+                    <div style={{ width: '55%', display: 'flex', flexDirection: 'column', gap: '15px', zIndex: 5 }}>
+                      <h2 style={{ fontSize: '2.4rem', fontWeight: '800', lineHeight: '1.1', color: '#0F172A', fontFamily: "'Outfit', sans-serif" }}>
+                        {slide.title || "Style and Speed"}
+                      </h2>
+                      <p style={{ fontSize: '0.95rem', color: '#475569', fontWeight: '400', maxWidth: '300px' }}>
+                        {slide.subtitle || "Latest Trends. Best Prices. Just for You!"}
+                      </p>
+                      <div>
+                        <Link to={slide.link || "/shop"} className="btn btn-primary" style={{ padding: '10px 24px', backgroundColor: '#000000', color: '#FFFFFF' }}>
+                          Shop Now
+                        </Link>
+                      </div>
+                      <span style={{ fontSize: '0.8rem', color: '#94A3B8', fontWeight: '500', marginTop: '10px' }}>@anjana</span>
+                    </div>
 
-          {/* Tabs header */}
-          <div className="trending-tabs-container">
-            {['featured', 'bestseller', 'newarrival'].map(tab => (
-              <button 
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`trending-tab-btn ${activeTab === tab ? 'active' : ''}`}
-              >
-                {tab === 'featured' ? 'Featured' : tab === 'bestseller' ? 'Best Sellers' : 'New Arrivals'}
-              </button>
-            ))}
-          </div>
+                    <div style={{ width: '45%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <img 
+                        src={imageUrl} 
+                        alt="Hero Slide" 
+                        onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=600&q=80'; }}
+                        style={{ width: '100%', height: '85%', objectFit: 'contain', borderRadius: '16px' }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
 
-          {/* Products Grid */}
-          {products.length > 0 ? (
-            <div className="grid-4">
-              {products.slice(0, 8).map(prod => (
-                <ProductCard 
-                  key={prod.id} 
-                  product={prod}
-                  cart={cart}
-                  wishlist={wishlist}
-                  onAddToCart={onAddToCart}
-                  onToggleWishlist={onToggleWishlist}
+              {/* Slider Controls */}
+              {banners.length > 1 && (
+                <div style={{ position: 'absolute', bottom: '20px', left: '40px', display: 'flex', gap: '8px', zIndex: 10 }}>
+                  {banners.map((_, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => setCurrentBanner(idx)}
+                      style={{
+                        width: '8px', height: '8px', borderRadius: '50%',
+                        backgroundColor: currentBanner === idx ? '#0F172A' : '#CBD5E1',
+                        border: 'none', cursor: 'pointer'
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Right: 4 Promo Cards Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }} className="hero-promo-grid">
+              
+              {/* Card 1: Smart Watch */}
+              <Link to="/shop?search=watch" style={{ 
+                backgroundColor: '#E6F2FF', 
+                borderRadius: '20px', 
+                padding: '20px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                height: '202px',
+                position: 'relative',
+                overflow: 'hidden'
+              }} className="hero-promo-card">
+                <div>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0F172A' }}>Smart Watch</h3>
+                  <span style={{ fontSize: '0.8rem', color: '#475569', display: 'block', marginTop: '4px' }}>From 499/-</span>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=300&q=80" 
+                  alt="Smart Watch" 
+                  style={{ width: '65%', height: '65%', objectFit: 'contain', alignSelf: 'flex-end', zIndex: 2 }}
                 />
-              ))}
-            </div>
-          ) : (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-              No products found under this section.
-            </div>
-          )}
+              </Link>
 
+              {/* Card 2: Wall Clock */}
+              <Link to="/shop?search=clock" style={{ 
+                backgroundColor: '#F5EFFF', 
+                borderRadius: '20px', 
+                padding: '20px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                height: '202px',
+                position: 'relative',
+                overflow: 'hidden'
+              }} className="hero-promo-card">
+                <div>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0F172A' }}>Wall Clock</h3>
+                  <span style={{ fontSize: '0.8rem', color: '#475569', display: 'block', marginTop: '4px' }}>From 299/-</span>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=300&q=80" 
+                  alt="Wall Clock" 
+                  style={{ width: '65%', height: '65%', objectFit: 'contain', alignSelf: 'flex-end', zIndex: 2 }}
+                />
+              </Link>
+
+              {/* Card 3: Cars For Kidz */}
+              <Link to="/shop?category=toys" style={{ 
+                backgroundColor: '#FFF0F2', 
+                borderRadius: '20px', 
+                padding: '20px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                height: '202px',
+                position: 'relative',
+                overflow: 'hidden'
+              }} className="hero-promo-card">
+                <div>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0F172A' }}>Cars For Kidz</h3>
+                  <span style={{ fontSize: '0.75rem', color: '#475569', display: 'block', marginTop: '4px' }}>From @anjana</span>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1559251606-c623743a6d76?auto=format&fit=crop&w=300&q=80" 
+                  alt="Toy Cars" 
+                  style={{ width: '65%', height: '65%', objectFit: 'contain', alignSelf: 'flex-end', zIndex: 2 }}
+                />
+              </Link>
+
+              {/* Card 4: Style Comfort & Quality */}
+              <Link to="/shop?search=earbuds" style={{ 
+                backgroundColor: '#EBF4FF', 
+                borderRadius: '20px', 
+                padding: '20px', 
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between',
+                height: '202px',
+                position: 'relative',
+                overflow: 'hidden'
+              }} className="hero-promo-card">
+                <div>
+                  <h3 style={{ fontSize: '0.95rem', fontWeight: '800', color: '#0F172A', lineHeight: '1.2' }}>Style Comfort & Quality</h3>
+                </div>
+                <img 
+                  src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=300&q=80" 
+                  alt="Earbuds" 
+                  style={{ width: '65%', height: '65%', objectFit: 'contain', alignSelf: 'flex-end', zIndex: 2 }}
+                />
+              </Link>
+
+            </div>
+
+          </div>
         </div>
       </section>
 
-      {/* 4. SDC Strengths Section */}
-      <section className="section-padding" style={{ backgroundColor: 'var(--primary)', color: 'rgba(255,255,255,0.8)' }}>
+      {/* 3. Product Showcase - Customer Most Loved */}
+      <section style={{ padding: '40px 0' }} className="most-loved-section">
         <div className="container">
           
-          <div className="section-title" style={{ marginBottom: '60px' }}>
-            <h2 style={{ color: '#FFFFFF' }}>Our Strength</h2>
-            <p style={{ color: 'rgba(255,255,255,0.6)' }}>Why thousands of families trust SDC Furniture & Electronic Canteen since 1998</p>
-          </div>
-
-          <div className="grid-4" style={{ gap: '40px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '15px' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '18px', borderRadius: '50%', color: 'var(--accent)' }}>
-                <Award size={32} />
-              </div>
-              <h3 style={{ color: '#FFFFFF', fontSize: '1.25rem' }}>15+ Years Experience</h3>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.7)' }}>Bringing deep technical expertise in carpentry and electrical distribution since 1998.</p>
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: '800', color: '#0F172A', margin: 0 }}>Coustomer Most Loved</h2>
             
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '15px' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '18px', borderRadius: '50%', color: 'var(--accent)' }}>
-                <ShieldCheck size={32} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              {/* Arrow navigation buttons for horizontal scrolling */}
+              <div style={{ display: 'flex', gap: '8px' }} className="scroll-buttons-wrapper">
+                <button 
+                  onClick={() => {
+                    const el = document.getElementById('most-loved-scroll-container');
+                    if (el) el.scrollBy({ left: -300, behavior: 'smooth' });
+                  }}
+                  style={{
+                    width: '38px', height: '38px', borderRadius: '50%', border: '1px solid #E2E8F0',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF',
+                    color: '#0F172A', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                  }}
+                  className="scroll-arrow-btn"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button 
+                  onClick={() => {
+                    const el = document.getElementById('most-loved-scroll-container');
+                    if (el) el.scrollBy({ left: 300, behavior: 'smooth' });
+                  }}
+                  style={{
+                    width: '38px', height: '38px', borderRadius: '50%', border: '1px solid #E2E8F0',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFFFF',
+                    color: '#0F172A', cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                  }}
+                  className="scroll-arrow-btn"
+                >
+                  <ChevronRight size={18} />
+                </button>
               </div>
-              <h3 style={{ color: '#FFFFFF', fontSize: '1.25rem' }}>Genuine Quality</h3>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.7)' }}>Original branded electronics and durable custom-manufactured solid teak/sheesham wood furniture.</p>
-            </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '15px' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '18px', borderRadius: '50%', color: 'var(--accent)' }}>
-                <Truck size={32} />
-              </div>
-              <h3 style={{ color: '#FFFFFF', fontSize: '1.25rem' }}>Safe Door Delivery</h3>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.7)' }}>Fast, secure doorstep delivery across Salasar, Sujangarh, and nearby regions of Rajasthan.</p>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '15px' }}>
-              <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '18px', borderRadius: '50%', color: 'var(--accent)' }}>
-                <Wrench size={32} />
-              </div>
-              <h3 style={{ color: '#FFFFFF', fontSize: '1.25rem' }}>Installation & Repair</h3>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.7)' }}>Our expert carpentry and electronics service technicians assist you after every purchase.</p>
+              <Link to="/shop" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '0.9rem', fontWeight: '700', color: '#E11D48', textDecoration: 'none' }} className="view-all-link">
+                View All Products <span style={{ fontSize: '1.1rem' }}>&rarr;</span>
+              </Link>
             </div>
           </div>
 
+          {/* Scrolling Flex row of cards */}
+          <div 
+            id="most-loved-scroll-container"
+            style={{ 
+              display: 'flex', 
+              gap: '20px', 
+              overflowX: 'auto', 
+              paddingBottom: '15px', 
+              scrollbarWidth: 'none',
+              scrollSnapType: 'x mandatory',
+              scrollBehavior: 'smooth'
+            }}
+          >
+            {products.length > 0 ? (
+              products.map(prod => (
+                <div key={prod.id} style={{ minWidth: '260px', width: '260px', scrollSnapAlign: 'start' }}>
+                  <ProductCard 
+                    product={prod}
+                    cart={cart}
+                    wishlist={wishlist}
+                    onAddToCart={onAddToCart}
+                    onToggleWishlist={onToggleWishlist}
+                  />
+                </div>
+              ))
+            ) : (
+              <div style={{ padding: '40px', color: '#64748B', width: '100%', textAlign: 'center' }}>
+                Loading customer choices...
+              </div>
+            )}
+          </div>
+
+        </div>
+      </section>
+
+      {/* 4. Benefits Section (At bottom of core details) */}
+      <section style={{ padding: '30px 0' }} className="benefits-section">
+        <div className="container">
+          <div style={{ 
+            backgroundColor: '#F8FAFC', 
+            borderRadius: '24px', 
+            border: '1px solid #E2E8F0', 
+            padding: '30px 24px', 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr 1fr', 
+            gap: '30px',
+            textAlign: 'center'
+          }} className="benefits-layout">
+            
+            {/* Delivery */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }} className="benefit-item">
+              <div style={{ color: '#0F172A', backgroundColor: '#E2E8F0', padding: '12px', borderRadius: '50%' }}>
+                <Truck size={24} />
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h4 style={{ fontSize: '1rem', fontWeight: '800', color: '#0F172A' }}>Fast Delivery</h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>On All Orders</p>
+              </div>
+            </div>
+
+            {/* Payment */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', borderLeft: '1px solid #E2E8F0', borderRight: '1px solid #E2E8F0' }} className="benefit-item">
+              <div style={{ color: '#0F172A', backgroundColor: '#E2E8F0', padding: '12px', borderRadius: '50%' }}>
+                <ShieldCheck size={24} />
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h4 style={{ fontSize: '1rem', fontWeight: '800', color: '#0F172A' }}>Secure Payment</h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>100% Protected</p>
+              </div>
+            </div>
+
+            {/* Quality */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px' }} className="benefit-item">
+              <div style={{ color: '#0F172A', backgroundColor: '#E2E8F0', padding: '12px', borderRadius: '50%' }}>
+                <Award size={24} />
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h4 style={{ fontSize: '1rem', fontWeight: '800', color: '#0F172A' }}>Quality Assured</h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '2px' }}>100% Genuine Products</p>
+              </div>
+            </div>
+
+          </div>
         </div>
       </section>
 
@@ -307,74 +474,65 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
         <div className="container about-grid">
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <span style={{ color: 'var(--accent)', fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-              Trusted Home Partner
+            <span style={{ color: '#E11D48', fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+              Trusted Partner
             </span>
             <h2 style={{ fontSize: '2.4rem', lineHeight: '1.2' }}>Bringing Quality Products to Every Home Since 1998</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem' }}>
-              At **SDC Furniture & Electronic Canteen**, we believe that every family deserves access to quality products at affordable prices. Our journey started in **1998** with the vision of making shopping simple, convenient, and trustworthy.
+            <p style={{ color: '#64748B', fontSize: '0.98rem' }}>
+              At **Anjana**, we believe that every family deserves access to quality products at affordable prices. We source and customize high-quality home furniture, smart electronics, mobiles, and home decor items.
             </p>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.98rem' }}>
-              Today, we proudly offer an extensive collection of furniture, electronics, home appliances, mobile phones, toys, and home décor products designed to meet the needs of modern homes and businesses. Our commitment to transparent pricing and exceptional service keeps us close to Rajasthan buyers.
+            <p style={{ color: '#64748B', fontSize: '0.98rem' }}>
+              Our commitment to transparent pricing, secure shipping, and professional customer service helps us stay close to thousands of happy families who trust us for their daily lifestyle and home setup needs.
             </p>
             <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }} className="about-stats-container">
               <div>
-                <h4 style={{ fontSize: '1.8rem', color: 'var(--primary)' }}>1998</h4>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Established Year</p>
+                <h4 style={{ fontSize: '1.8rem', color: '#0F172A' }}>1998</h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748B' }}>Established Year</p>
               </div>
-              <div style={{ borderLeft: '1px solid var(--border)' }}></div>
+              <div style={{ borderLeft: '1px solid #E2E8F0' }}></div>
               <div>
-                <h4 style={{ fontSize: '1.8rem', color: 'var(--primary)' }}>15K+</h4>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Happy Families</p>
+                <h4 style={{ fontSize: '1.8rem', color: '#0F172A' }}>15K+</h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748B' }}>Happy Families</p>
               </div>
-              <div style={{ borderLeft: '1px solid var(--border)' }}></div>
+              <div style={{ borderLeft: '1px solid #E2E8F0' }}></div>
               <div>
-                <h4 style={{ fontSize: '1.8rem', color: 'var(--primary)' }}>100%</h4>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Quality Assured</p>
+                <h4 style={{ fontSize: '1.8rem', color: '#0F172A' }}>100%</h4>
+                <p style={{ fontSize: '0.8rem', color: '#64748B' }}>Quality Assured</p>
               </div>
             </div>
           </div>
 
           <div style={{ position: 'relative' }}>
             <img 
-              src={`${window.API_URL}/uploads/cat-furniture.jpg`} 
-              alt="SDC Furniture Showroom" 
-              onError={(e) => { e.target.src = 'https://placehold.co/500x400/0a2a1b/ffffff?text=SDC+Showroom'; }}
-              style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-hover)' }} 
+              src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=800&q=80" 
+              alt="Anjana Showroom" 
+              style={{ width: '100%', height: '400px', objectFit: 'cover', borderRadius: '24px', boxShadow: '0 10px 35px rgba(0,0,0,0.05)' }} 
             />
-            <div style={{
-              position: 'absolute', bottom: '-20px', left: '-20px', padding: '20px',
-              backgroundColor: 'var(--accent)', color: '#FFFFFF', borderRadius: 'var(--radius-md)',
-              boxShadow: 'var(--shadow-hover)', display: 'none'
-            }} className="about-float-badge">
-              <span style={{ fontSize: '1.5rem', fontWeight: 'bold', display: 'block' }}>15+</span>
-              <span style={{ fontSize: '0.75rem', textTransform: 'uppercase' }}>Years Experience</span>
-            </div>
           </div>
 
         </div>
       </section>
 
       {/* 6. Dynamic Services section */}
-      <section id="services" className="section-padding" style={{ backgroundColor: 'var(--bg)' }}>
+      <section id="services" className="section-padding" style={{ backgroundColor: '#F8FAFC' }}>
         <div className="container">
           <div className="section-title">
             <h2>Our Services</h2>
-            <p>End-to-end shopping and maintenance solutions by SDC experts</p>
+            <p>End-to-end shopping and maintenance solutions by experts</p>
           </div>
 
           <div className="grid-3 services-grid">
             {[
-              { title: 'Furniture Manufacturing', desc: 'Custom manufacturer of solid wood dining sets, carved sofa sets, mandirs, and premium beds at factory rates.' },
-              { title: 'Electronics Supply & Installation', desc: 'Authorized supply of smart LED TVs, air conditioners, and coolers with brand warranty support and setup.' },
-              { title: 'Logistics & Home Delivery', desc: 'Fast, secure shipping using cushioned packaging blocks to prevent scratching during transit across Rajasthan.' },
-              { title: 'Appliance Repair Services', desc: 'Skilled electrical technicians on-call for product repair, parts replacement, and installation support.' },
-              { title: 'Corporate & Bulk Booking', desc: 'Bulk supply packages for local hotels, government institutions, guest houses, and interior decorators.' },
-              { title: 'After-Sales Assistance', desc: '24/7 client helpline for post-purchase query resolution, setup instructions, and claims support.' }
+              { title: 'Furniture Design', desc: 'Custom manufacturer of solid wood dining sets, carved sofa sets, mandirs, and premium beds at factory rates.' },
+              { title: 'Electronics Supply', desc: 'Authorized supply of smart LED TVs, air conditioners, and coolers with brand warranty support and setup.' },
+              { title: 'Logistics & Home Delivery', desc: 'Fast, secure shipping using cushioned packaging blocks to prevent damage during transit.' },
+              { title: 'Appliance Repair Support', desc: 'Skilled electrical technicians on-call for product repair, parts replacement, and installation support.' },
+              { title: 'Corporate & Bulk Booking', desc: 'Bulk supply packages for local hotels, government institutions, guest houses, and decorators.' },
+              { title: 'After-Sales Assistance', desc: 'Client helpline for post-purchase query resolution, setup instructions, and claims support.' }
             ].map((srv, idx) => (
-              <div key={idx} className="glass-panel srv-card" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '15px' }}>
-                <h3 style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>{srv.title}</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{srv.desc}</p>
+              <div key={idx} className="srv-card" style={{ padding: '30px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: '#FFFFFF', borderRadius: '16px', border: '1px solid #E2E8F0', boxShadow: '0 4px 12px rgba(0,0,0,0.01)' }}>
+                <h3 style={{ fontSize: '1.25rem', color: '#0F172A', fontWeight: '700' }}>{srv.title}</h3>
+                <p style={{ fontSize: '0.9rem', color: '#64748B' }}>{srv.desc}</p>
               </div>
             ))}
           </div>
@@ -386,17 +544,17 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
         <div className="container">
           <div className="section-title">
             <h2>Our Gallery</h2>
-            <p>Take a virtual tour of SDC showroom catalogs and deliveries</p>
+            <p>Take a virtual tour of our showroom collections and designs</p>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }} className="gallery-grid">
             {[
-              { id: 1, title: 'Premium Sofas', img: '/uploads/cat-sofas.jpg', fallback: 'https://placehold.co/300x300?text=Sofa+Collection' },
-              { id: 2, title: 'Smart TVs', img: '/uploads/cat-tvs.jpg', fallback: 'https://placehold.co/300x300?text=LED+TV+Stock' },
-              { id: 3, title: 'God Statues', img: '/uploads/cat-statues.jpg', fallback: 'https://placehold.co/300x300?text=Brass+Statues' },
-              { id: 4, title: 'Comfort Recliners', img: '/uploads/cat-recliners.jpg', fallback: 'https://placehold.co/300x300?text=Recliners' }
+              { id: 1, title: 'Premium Sofas', img: '/uploads/cat-sofas.jpg', fallback: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80' },
+              { id: 2, title: 'Smart TVs', img: '/uploads/cat-tvs.jpg', fallback: 'https://images.unsplash.com/photo-1593305841991-05c297ba4575?auto=format&fit=crop&w=400&q=80' },
+              { id: 3, title: 'God Statues', img: '/uploads/cat-statues.jpg', fallback: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=400&q=80' },
+              { id: 4, title: 'Comfort Recliners', img: '/uploads/cat-recliners.jpg', fallback: 'https://images.unsplash.com/photo-1592078615290-033ee584e267?auto=format&fit=crop&w=400&q=80' }
             ].map(item => (
-              <div key={item.id} style={{ position: 'relative', overflow: 'hidden', height: '220px', borderRadius: 'var(--radius-md)' }} className="gallery-card">
+              <div key={item.id} style={{ position: 'relative', overflow: 'hidden', height: '220px', borderRadius: '16px' }} className="gallery-card">
                 <img 
                   src={item.img.startsWith('/') ? `${window.API_URL}${item.img}` : item.img} 
                   alt={item.title} 
@@ -406,10 +564,10 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
                 />
                 <div className="gallery-overlay" style={{
                   position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                  backgroundColor: 'rgba(10, 42, 27, 0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  opacity: 0, transition: 'var(--transition)'
+                  backgroundColor: 'rgba(15, 23, 42, 0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  opacity: 0, transition: 'var(--transition)', zIndex: 5
                 }}>
-                  <h4 style={{ color: '#FFFFFF', fontSize: '1.1rem' }}>{item.title}</h4>
+                  <h4 style={{ color: '#FFFFFF', fontSize: '1.1rem', fontWeight: '700' }}>{item.title}</h4>
                 </div>
               </div>
             ))}
@@ -417,25 +575,25 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
         </div>
       </section>
 
-      {/* 8. Customer Reviews Slider */}
+      {/* 8. Customer Reviews Section */}
       {reviews.length > 0 && (
-        <section className="section-padding" style={{ backgroundColor: 'var(--bg)' }}>
+        <section className="section-padding" style={{ backgroundColor: '#F8FAFC' }}>
           <div className="container" style={{ maxWidth: '800px', textAlign: 'center' }}>
-            <div className="section-title">
-              <h2>Customer Reviews</h2>
-              <p>Hear from SDC clients who decorated their homes with us</p>
+            <div className="section-title" style={{ textAlign: 'center' }}>
+              <h2 style={{ textAlign: 'center' }}>Customer Reviews</h2>
+              <p>Hear from clients who decorated their homes with us</p>
             </div>
 
-            <div className="glass-panel" style={{ padding: '40px', position: 'relative' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', color: 'var(--accent)', marginBottom: '20px' }}>
+            <div style={{ padding: '40px', backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1px solid #E2E8F0', position: 'relative' }} className="reviews-card">
+              <div style={{ display: 'flex', justifyContent: 'center', color: '#F59E0B', marginBottom: '20px' }}>
                 {[...Array(reviews[currentReview].rating)].map((_, i) => (
-                  <Star key={i} size={20} fill="var(--accent)" />
+                  <Star key={i} size={20} fill="#F59E0B" stroke="#F59E0B" />
                 ))}
               </div>
-              <p style={{ fontStyle: 'italic', fontSize: '1.1rem', color: 'var(--primary)', lineHeight: '1.6', marginBottom: '25px' }}>
+              <p style={{ fontStyle: 'italic', fontSize: '1.1rem', color: '#334155', lineHeight: '1.6', marginBottom: '25px' }}>
                 "{reviews[currentReview].comment}"
               </p>
-              <h4 style={{ fontSize: '1rem', fontWeight: '700' }}>
+              <h4 style={{ fontSize: '1rem', fontWeight: '700', color: '#0F172A' }}>
                 {reviews[currentReview].customer_name}
               </h4>
 
@@ -447,7 +605,8 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
                     onClick={() => setCurrentReview(idx)}
                     style={{
                       width: '8px', height: '8px', borderRadius: '50%',
-                      backgroundColor: currentReview === idx ? 'var(--primary)' : '#C4C8C5'
+                      backgroundColor: currentReview === idx ? '#0F172A' : '#CBD5E1',
+                      border: 'none', cursor: 'pointer'
                     }}
                   />
                 ))}
@@ -464,28 +623,28 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
           
           {/* Business Details Text */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <span style={{ color: 'var(--accent)', fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            <span style={{ color: '#E11D48', fontWeight: '700', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
               Send Inquiry
             </span>
             <h2 style={{ fontSize: '2.4rem' }}>Request a Free Quote</h2>
-            <p style={{ color: 'var(--text-muted)' }}>
+            <p style={{ color: '#64748B' }}>
               Looking for custom manufactured beds, premium sofa sets, bulk LED TV bookings, or other lifestyle items? Fill out the form, and our sales executive will call you within 24 hours with custom discounted rates.
             </p>
             
-            <div style={{ marginTop: '20px', borderLeft: '3px solid var(--accent)', paddingLeft: '15px' }}>
-              <p style={{ fontWeight: 'bold', color: 'var(--primary)', marginBottom: '5px' }}>Call SDC Store:</p>
-              <p style={{ fontSize: '1.1rem', color: 'var(--text)' }}>+91 9982827751, +91 9950105100</p>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Showroom hours: Mon - Sun (10 AM to 5 PM)</p>
+            <div style={{ marginTop: '20px', borderLeft: '3px solid #E11D48', paddingLeft: '15px' }}>
+              <p style={{ fontWeight: 'bold', color: '#0F172A', marginBottom: '5px' }}>Call Store Helpline:</p>
+              <p style={{ fontSize: '1.2rem', fontWeight: '800', color: '#E11D48' }}>+91 9982827751, +91 9950105100</p>
+              <p style={{ fontSize: '0.8rem', color: '#64748B', marginTop: '3px' }}>Showroom hours: Mon - Sun (10 AM to 5 PM)</p>
             </div>
           </div>
 
           {/* Form Panel */}
-          <div className="glass-panel" style={{ padding: '30px' }}>
+          <div style={{ padding: '30px', backgroundColor: '#FFFFFF', borderRadius: '24px', border: '1px solid #E2E8F0', boxShadow: '0 4px 15px rgba(0,0,0,0.01)' }}>
             {formSubmitted ? (
-              <div style={{ textAlign: 'center', padding: '40px 0', color: '#2E7D32' }}>
+              <div style={{ textAlign: 'center', padding: '40px 0', color: '#059669' }}>
                 <ShieldCheck size={48} style={{ margin: '0 auto 15px auto' }} />
-                <h3 style={{ color: '#2E7D32' }}>Inquiry Submitted!</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>Thank you for contacting SDC Furniture & Electronic Canteen. Our team will contact you shortly.</p>
+                <h3 style={{ color: '#059669', fontWeight: '800' }}>Inquiry Submitted!</h3>
+                <p style={{ fontSize: '0.9rem', color: '#64748B', marginTop: '5px' }}>Thank you for contacting Anjana. Our team will contact you shortly.</p>
               </div>
             ) : (
               <form onSubmit={handleContactSubmit}>
@@ -539,7 +698,7 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
                     style={{ resize: 'vertical' }}
                   ></textarea>
                 </div>
-                <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+                <button type="submit" className="btn btn-primary" style={{ width: '100%', justifyContent: 'center' }}>
                   Submit Inquiry / Request Callback
                 </button>
               </form>
@@ -562,37 +721,48 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
           grid-template-columns: 1fr 1.2fr;
           gap: 50px;
         }
-        .category-circle-link:hover .circle-image-holder {
-          border-color: var(--accent) !important;
+        .category-circle-item:hover {
+          border-color: #FFEBE4 !important;
           transform: scale(1.05);
-          box-shadow: var(--shadow-hover);
+          box-shadow: 0 4px 15px rgba(225, 29, 72, 0.08) !important;
         }
         .gallery-card:hover .gallery-img {
-          transform: scale(1.1);
+          transform: scale(1.06);
         }
         .gallery-card:hover .gallery-overlay {
           opacity: 1 !important;
         }
-        @media (max-width: 768px) {
-          .popular-categories {
+        .scroll-arrow-btn:hover {
+          background-color: #F8FAFC !important;
+          border-color: #CBD5E1 !important;
+          transform: scale(1.05);
+        }
+        .view-all-link:hover {
+          color: #BE123C !important;
+        }
+        .hero-promo-card {
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.01);
+        }
+        .hero-promo-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
+        }
+        .category-scroll-list::-webkit-scrollbar {
+          display: none !important;
+        }
+        @media (max-width: 991px) {
+          .hero-grid-layout {
+            grid-template-columns: 1fr !important;
             gap: 20px !important;
           }
-          .circle-image-holder {
-            width: 100px !important;
-            height: 100px !important;
+          .hero-main-card {
+            height: 380px !important;
           }
+        }
+        @media (max-width: 768px) {
           .gallery-grid {
             grid-template-columns: repeat(2, 1fr) !important;
-          }
-          .hero-section {
-            height: 400px !important;
-          }
-          .hero-content h1 {
-            font-size: 1.8rem !important;
-          }
-          .hero-content p {
-            font-size: 0.88rem !important;
-            margin-bottom: 20px !important;
           }
           .about-grid h2, .contact-grid h2 {
             font-size: 1.6rem !important;
@@ -604,11 +774,22 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
             grid-template-columns: 1fr !important;
             gap: 30px !important;
           }
-        }
-        @media (max-width: 768px) {
-          .hero-section button {
-            display: none !important;
+          .benefits-layout {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
           }
+          .benefit-item {
+            border-left: none !important;
+            border-right: none !important;
+            border-bottom: 1px solid #E2E8F0;
+            padding-bottom: 15px;
+          }
+          .benefit-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+          }
+        }
+        @media (max-width: 600px) {
           .services-grid {
             grid-template-columns: 1fr !important;
             gap: 20px !important;
@@ -617,17 +798,13 @@ export default function Home({ cart, wishlist, onAddToCart, onToggleWishlist }) 
             padding: 20px !important;
             gap: 10px !important;
           }
+          .scroll-buttons-wrapper {
+            display: none !important;
+          }
         }
         @media (max-width: 500px) {
           .gallery-grid {
             grid-template-columns: 1fr !important;
-          }
-          .circle-image-holder {
-            width: 80px !important;
-            height: 80px !important;
-          }
-          .popular-categories {
-            gap: 15px !important;
           }
           .about-stats-container {
             flex-direction: row !important;
