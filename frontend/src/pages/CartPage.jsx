@@ -306,7 +306,15 @@ export default function CartPage({ cart, userToken, user, onUpdateQuantity, onRe
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid #0F172A', paddingBottom: '20px', marginBottom: '24px' }}>
             <div>
-              <h1 style={{ fontSize: '1.8rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A' }}>Anjana</h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                <img 
+                  src="/logo.png" 
+                  alt="Anjana Logo" 
+                  style={{ height: '36px', width: 'auto', objectFit: 'contain' }} 
+                  onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+                />
+                <span style={{ fontSize: '1.8rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A', display: 'none' }}>Anjana</span>
+              </div>
               <p style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: '#E11D48', fontWeight: '700', letterSpacing: '0.5px' }}>Premium E-Commerce Store</p>
               <p style={{ fontSize: '0.78rem', color: '#64748B', marginTop: '4px', maxWidth: '300px' }}>
                 Near Balaji Goshala, Salasar, Rajasthan – 331506

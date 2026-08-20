@@ -52,13 +52,20 @@ export default function Header({ cart, wishlist, adminToken, onLogout, userToken
         <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
           
           {/* Left: Brand Logo */}
-          <Link to="/" style={{ display: 'flex', alignItems: 'center' }}>
+          <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <img 
+              src="/logo.png" 
+              alt="Anjana Logo" 
+              style={{ height: '65px', width: 'auto', objectFit: 'contain', margin: '-10px 0' }} 
+              onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+            />
             <span style={{ 
               fontSize: '1.8rem', 
               fontWeight: '800', 
               color: '#0F172A', 
               fontFamily: "'Outfit', sans-serif", 
-              letterSpacing: '-0.5px' 
+              letterSpacing: '-0.5px',
+              display: 'none'
             }} className="logo-title">
               Anjana
             </span>

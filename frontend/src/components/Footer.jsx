@@ -18,15 +18,24 @@ export default function Footer() {
           
           {/* Col 1: About Brand */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-            <h3 style={{ 
-              color: '#0F172A', 
-              fontFamily: "'Outfit', sans-serif", 
-              fontSize: '1.5rem', 
-              fontWeight: '800', 
-              letterSpacing: '-0.5px'
-            }}>
-              Anjana
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <img 
+                src="/logo.png" 
+                alt="Anjana Logo" 
+                style={{ height: '55px', width: 'auto', objectFit: 'contain' }} 
+                onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+              />
+              <h3 style={{ 
+                color: '#0F172A', 
+                fontFamily: "'Outfit', sans-serif", 
+                fontSize: '1.5rem', 
+                fontWeight: '800', 
+                letterSpacing: '-0.5px',
+                display: 'none'
+              }}>
+                Anjana
+              </h3>
+            </div>
             <p style={{ fontSize: '0.88rem', lineHeight: '1.6', color: '#64748B' }}>
               **Anjana** is a premium e-commerce platform offering a curated collection of state-of-the-art furniture, smart electronics, mobile devices, home decor, and kids accessories. Experience comfort, style, and quality combined.
             </p>

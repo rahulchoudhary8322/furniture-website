@@ -1784,10 +1784,18 @@ export default function AdminDashboard({ adminToken, onLogout }) {
               {/* Commercial Invoice Heading */}
               <div style={{ display: 'flex', justifyContent: 'space-between', borderBottom: '2px solid var(--primary)', paddingBottom: '15px', marginBottom: '20px' }}>
                 <div>
-                  <h2 style={{ fontSize: '1.6rem', fontFamily: "'Playfair Display', serif", margin: 0, color: 'var(--primary)' }}>SDC CANTEEN</h2>
-                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 'bold', letterSpacing: '0.5px' }}>Furniture & Electronics Showroom</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                    <img 
+                      src="/logo.png" 
+                      alt="Anjana Logo" 
+                      style={{ height: '32px', width: 'auto', objectFit: 'contain' }} 
+                      onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'block'; }}
+                    />
+                    <h2 style={{ fontSize: '1.6rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', margin: 0, color: 'var(--primary)', display: 'none' }}>Anjana</h2>
+                  </div>
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--accent)', fontWeight: 'bold', letterSpacing: '0.5px' }}>Premium E-Commerce Store</span>
                   <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '5px', maxWidth: '280px', lineHeight: '1.4' }}>
-                    Near Balaji Goshala, Salasar Ke Samne, Sujangarh Road, Salasar, Churu, Rajasthan – 331506
+                    Near Balaji Goshala, Salasar, Rajasthan – 331506
                   </p>
                 </div>
                 <div style={{ textAlign: 'right' }}>
@@ -1808,7 +1816,7 @@ export default function AdminDashboard({ adminToken, onLogout }) {
                 </div>
                 <div style={{ textAlign: 'right' }}>
                   <span style={{ color: 'var(--primary)', fontWeight: 'bold', display: 'block', marginBottom: '4px', textTransform: 'uppercase', fontSize: '0.75rem' }}>Supplier Details:</span>
-                  <p style={{ fontWeight: 'bold', margin: '2px 0' }}>SDC Furniture & Electronic Canteen</p>
+                  <p style={{ fontWeight: 'bold', margin: '2px 0' }}>Anjana E-Commerce</p>
                   <p style={{ margin: '2px 0' }}>Email: anjanamobile7751@gmail.com</p>
                   <p style={{ margin: '2px 0' }}>GSTIN: 08AAAAA1111A1Z0 (Mock)</p>
                 </div>
@@ -1854,8 +1862,8 @@ export default function AdminDashboard({ adminToken, onLogout }) {
 
               {/* Term notes */}
               <div style={{ borderTop: '1px solid var(--border)', marginTop: '25px', paddingTop: '10px', textAlign: 'center', fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                <p style={{ margin: '2px 0' }}>Thank you for doing business with us! SDC showroom salutes your trust since 1998.</p>
-                <p style={{ margin: '2px 0', fontStyle: 'italic' }}>Authorized Signatory Seal & Signature (SDC Canteen)</p>
+                <p style={{ margin: '2px 0' }}>Thank you for doing business with us! Anjana salutes your trust since 1998.</p>
+                <p style={{ margin: '2px 0', fontStyle: 'italic' }}>Authorized Signatory Seal & Signature (Anjana)</p>
               </div>
 
             </div>
