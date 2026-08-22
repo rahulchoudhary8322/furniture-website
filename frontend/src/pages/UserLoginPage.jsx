@@ -94,11 +94,14 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
-    if (!username || !email || !password) return;
+    if (!email || !password) return;
 
     setLoading(true);
     setError('');
     setSuccess('');
+
+    // Generate a unique fallback username on frontend based on email prefix + random suffix
+    const signupUsername = username || email.split('@')[0] + '_' + Math.floor(1000 + Math.random() * 9000);
 
     try {
       let response;
@@ -112,7 +115,7 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              username,
+              username: signupUsername,
               email,
               full_name: fullName,
               phone,
@@ -149,7 +152,7 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            username,
+            username: signupUsername,
             email,
             password,
             full_name: fullName,
@@ -216,39 +219,13 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
 
   return (
     <div className="container section-padding" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh', animation: 'fadeIn 0.4s ease' }}>
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '480px', padding: '40px', borderRadius: 'var(--radius-lg)' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', padding: '40px', borderRadius: 'var(--radius-lg)' }}>
         
-        {/* Header Tabs */}
-        <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', marginBottom: '30px' }}>
-          <button 
-            onClick={() => { setIsLoginTab(true); setError(''); setSuccess(''); }}
-            style={{
-              flex: 1, padding: '12px', fontSize: '1.05rem', fontWeight: '600',
-              color: isLoginTab ? 'var(--primary)' : 'var(--text-muted)',
-              borderBottom: isLoginTab ? '2px solid var(--accent)' : 'none',
-              background: 'none', transition: 'var(--transition)'
-            }}
-          >
-            Sign In
-          </button>
-          <button 
-            onClick={() => { setIsLoginTab(false); setError(''); setSuccess(''); }}
-            style={{
-              flex: 1, padding: '12px', fontSize: '1.05rem', fontWeight: '600',
-              color: !isLoginTab ? 'var(--primary)' : 'var(--text-muted)',
-              borderBottom: !isLoginTab ? '2px solid var(--accent)' : 'none',
-              background: 'none', transition: 'var(--transition)'
-            }}
-          >
-            Create Account
-          </button>
-        </div>
-
-        <div style={{ textAlign: 'center', marginBottom: '25px' }}>
-          <h2 style={{ fontSize: '1.6rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A' }}>
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <h2 style={{ fontSize: '1.6rem', fontFamily: "'Outfit', sans-serif", fontWeight: '800', color: '#0F172A', marginBottom: '8px' }}>
             {isLoginTab ? 'Welcome Back!' : 'Join Anjana'}
           </h2>
-          <p style={{ fontSize: '0.82rem', color: '#64748B' }}>
+          <p style={{ fontSize: '0.82rem', color: '#64748B', lineHeight: '1.4' }}>
             {isLoginTab ? 'Sign in to access your wishlist and complete purchases' : 'Register to save your products, cart, and address details'}
           </p>
         </div>
@@ -276,18 +253,50 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
           </div>
         )}
 
+        {/* Google Authentication (At the Top) */}
+        {auth && (
+          <div style={{ marginBottom: '24px' }}>
+            <button 
+              onClick={handleGoogleLogin} 
+              disabled={loading}
+              type="button"
+              style={{
+                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
+                backgroundColor: '#FFFFFF', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)',
+                padding: '12px 16px', fontSize: '0.9rem', fontWeight: '600', color: 'var(--text)',
+                cursor: 'pointer', transition: 'var(--transition)', boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+              }}
+              className="google-signin-btn"
+            >
+              <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C4 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 4 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              {loading ? 'Connecting...' : 'Continue with Google'}
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }}></div>
+              <span style={{ padding: '0 10px', textTransform: 'lowercase', fontWeight: '500', letterSpacing: '0.5px' }}>or</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }}></div>
+            </div>
+          </div>
+        )}
+
         {/* Forms */}
         {isLoginTab ? (
           <form onSubmit={handleLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             
             <div className="form-group" style={{ marginBottom: 0 }}>
-              <label htmlFor="user-login-username">Username or Email *</label>
+              <label htmlFor="user-login-username">Email or Username *</label>
               <div style={{ position: 'relative' }}>
                 <input 
                   type="text" 
                   id="user-login-username" 
                   required 
-                  placeholder="Enter your username or email" 
+                  placeholder="Enter your email or username" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="form-control"
@@ -320,25 +329,8 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
 
           </form>
         ) : (
-          <form onSubmit={handleRegisterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <form onSubmit={handleRegisterSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label htmlFor="user-reg-username">Username *</label>
-              <div style={{ position: 'relative' }}>
-                <input 
-                  type="text" 
-                  id="user-reg-username" 
-                  required 
-                  placeholder="Choose username (e.g. sahil_98)" 
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="form-control"
-                  style={{ paddingLeft: '40px' }}
-                />
-                <User size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-              </div>
-            </div>
-
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label htmlFor="user-reg-email">Email Address *</label>
               <div style={{ position: 'relative' }}>
@@ -373,90 +365,6 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
               </div>
             </div>
 
-            <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '10px 0' }} />
-            
-            <p style={{ fontSize: '0.8rem', fontWeight: '600', color: 'var(--primary)', marginBottom: '5px' }}>Optional Profile Details</p>
-
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label htmlFor="user-reg-name">Full Name</label>
-              <input 
-                type="text" 
-                id="user-reg-name" 
-                placeholder="Enter your first and last name" 
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="form-control" 
-              />
-            </div>
-
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label htmlFor="user-reg-phone">Phone Number</label>
-              <div style={{ position: 'relative' }}>
-                <input 
-                  type="tel" 
-                  id="user-reg-phone" 
-                  placeholder="e.g. +91 9982827751" 
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="form-control"
-                  style={{ paddingLeft: '40px' }}
-                />
-                <Phone size={16} style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
-              </div>
-            </div>
-
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label htmlFor="user-reg-address">Shipping Address</label>
-              <div style={{ position: 'relative' }}>
-                <textarea 
-                  id="user-reg-address" 
-                  rows="2" 
-                  placeholder="Flat no., Street address" 
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  className="form-control"
-                  style={{ paddingLeft: '40px' }}
-                ></textarea>
-                <MapPin size={16} style={{ position: 'absolute', left: '14px', top: '15px', color: 'var(--text-muted)' }} />
-              </div>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label htmlFor="reg-city">City</label>
-                <input 
-                  type="text" 
-                  id="reg-city" 
-                  placeholder="Jaipur" 
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="form-control" 
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label htmlFor="reg-state">State</label>
-                <input 
-                  type="text" 
-                  id="reg-state" 
-                  placeholder="Rajasthan" 
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  className="form-control" 
-                />
-              </div>
-              <div className="form-group" style={{ marginBottom: 0 }}>
-                <label htmlFor="reg-pincode">Pincode</label>
-                <input 
-                  type="text" 
-                  id="reg-pincode" 
-                  placeholder="302001" 
-                  value={pincode}
-                  onChange={(e) => setPincode(e.target.value)}
-                  className="form-control" 
-                />
-              </div>
-            </div>
-
             <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%', marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
               <UserPlus size={18} /> {loading ? 'Registering...' : 'Create Account'}
             </button>
@@ -464,36 +372,32 @@ export default function UserLoginPage({ userToken, onUserLoginSuccess }) {
           </form>
         )}
 
-        {auth && (
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0', color: 'var(--text-muted)', fontSize: '0.8rem' }}>
-              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }}></div>
-              <span style={{ padding: '0 10px' }}>OR</span>
-              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }}></div>
-            </div>
-
-            <button 
-              onClick={handleGoogleLogin} 
-              disabled={loading}
-              type="button"
-              style={{
-                width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px',
-                backgroundColor: '#FFFFFF', border: '1px solid var(--border)', borderRadius: 'var(--radius-md)',
-                padding: '10px 16px', fontSize: '0.9rem', fontWeight: '600', color: 'var(--text)',
-                cursor: 'pointer', transition: 'var(--transition)'
-              }}
-              className="google-signin-btn"
-            >
-              <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C4 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 4 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-              {loading ? 'Connecting...' : 'Sign In with Google'}
-            </button>
-          </>
-        )}
+        {/* Bottom Toggle switch */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '24px', fontSize: '0.85rem', color: '#64748B' }}>
+          {isLoginTab ? (
+            <span>
+              Don't have an account?{' '}
+              <button 
+                type="button"
+                onClick={() => { setIsLoginTab(false); setError(''); setSuccess(''); }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: '600', cursor: 'pointer', padding: 0 }}
+              >
+                Sign Up
+              </button>
+            </span>
+          ) : (
+            <span>
+              Already have an account?{' '}
+              <button 
+                type="button"
+                onClick={() => { setIsLoginTab(true); setError(''); setSuccess(''); }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent)', fontWeight: '600', cursor: 'pointer', padding: 0 }}
+              >
+                Sign In
+              </button>
+            </span>
+          )}
+        </div>
 
       </div>
     </div>

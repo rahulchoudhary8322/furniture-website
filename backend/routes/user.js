@@ -25,9 +25,25 @@ router.post('/register', async (req, res) => {
         finalUsername = decodedToken.name || decodedToken.email.split('@')[0];
       }
     } else {
-      if (!finalUsername || !finalEmail || !password) {
-        return res.status(400).json({ success: false, message: 'Username, email and password are required.' });
+      if (!finalEmail || !password) {
+        return res.status(400).json({ success: false, message: 'Email and password are required.' });
       }
+    }
+
+    // Auto-generate a unique username if not provided
+    if (!finalUsername && finalEmail) {
+      const baseUsername = finalEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
+      let uniqueUsername = baseUsername || 'user';
+      let exists = true;
+      while (exists) {
+        const [existingUser] = await db.query('SELECT id FROM users WHERE username = ?', [uniqueUsername]);
+        if (existingUser.length === 0) {
+          exists = false;
+        } else {
+          uniqueUsername = `${baseUsername}${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+      }
+      finalUsername = uniqueUsername;
     }
 
     // Check if username or email already exists
